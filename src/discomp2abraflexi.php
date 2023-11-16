@@ -15,32 +15,39 @@ define('APP_NAME', 'Discomp2AbraFlexi');
 require_once '../vendor/autoload.php';
 \Ease\Shared::init(
     [
-    'ABRAFLEXI_URL',
-    'ABRAFLEXI_LOGIN',
-    'ABRAFLEXI_PASSWORD',
-    'ABRAFLEXI_COMPANY',
-    'ABRAFLEXI_STORAGE',
-    'DISCOMP_USERNAME',
-    'DISCOMP_PASSWORD'
+            'ABRAFLEXI_URL',
+            'ABRAFLEXI_LOGIN',
+            'ABRAFLEXI_PASSWORD',
+            'ABRAFLEXI_COMPANY',
+            'ABRAFLEXI_STORAGE',
+            'DISCOMP_USERNAME',
+            'DISCOMP_PASSWORD'
         ],
     '../.env'
 );
 
 $discomper = new Discomp\ApiClient();
-$sokoban = new \AbraFlexi\Cenik();
+$sokoban = new \AbraFlexi\Cenik(null, ['ignore404' => true]);
+$suplier = \AbraFlexi\RO::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
 if (\Ease\Shared::cfg('APP_DEBUG', false)) {
     $sokoban->logBanner();
 }
-
 
 $activeItems = $discomper->getResult('StoItemActive');
 $discomper->addStatusMessage(sprintf(_('%d Active Items found'), count($activeItems)), 'success');
 $storageItems = [];
 
+$new = 0;
+$updated = 0;
+$skipped = 0;
+$errors = 0;
+
 foreach ($activeItems as $pos => $activeItemData) {
     $storageItem = $discomper->getItemByCode($activeItemData['@attributes']['Code']);
     $stoItem = $storageItem['StoItemBase']['StoItem']['@attributes'];
     if (array_key_exists('PartNo', $stoItem)) {
+        $recordCheck = $sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
+        //$newProduct = ($sokoban->lastResponseCode == 404);
         /*
           Id="number | jednoznacna identifikace produktu (aut. cislo), zretezenim s attributy Url* lze dostat vysledny link"
           Code="string | jednoznacna identifikace produktu jako text (slouzi k vyhledavani a pod.)"
@@ -77,7 +84,7 @@ foreach ($activeItems as $pos => $activeItemData) {
           NoteShort="string | zkracena poznamka"
           Note="string | poznamka"
          */
-        print_r($storageItem);
+        //print_r($storageItem);
 
         $sokoban->dataReset();
         $sokoban->setDataValue('typZasobyK', 'typZasoby.zbozi'); //TODO: ???
@@ -93,12 +100,28 @@ foreach ($activeItems as $pos => $activeItemData) {
 //    if(array_key_exists('Note', $stoItem)){
 //        $sokoban->setDataValue('popis',$stoItem['Note']); //TODO: Source contains HTML markup
 //    }
-        $sokoban->setDataValue('dodavatel', 'code:' . \Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
+        $sokoban->setDataValue('dodavatel', $suplier);
 
-        print_r($sokoban->getData());
+        //print_r($sokoban->getData());
 
-        $discomper->addStatusMessage($pos . '/' . count($activeItems) . ' ' . $stoItem['Code'] . ': ' . $stoItem['Name'], $sokoban->insertToAbraFlexi() ? 'success' : 'error');
+        if (empty($recordCheck)) {
+            $discomper->addStatusMessage($pos . '/' . count($activeItems) . ' ' . $stoItem['Code'] . ': ' . $stoItem['Name'] . ' new item', $sokoban->insertToAbraFlexi() ? 'success' : 'error');
+            if ($sokoban->lastResponseCode == 201) {
+                $new++;
+            } else {
+                $errors++;
+            }
+        } else {
+            if (array_key_exists('dodavatel', $recordCheck) && ($recordCheck['dodavatel'] == $suplier)) {
+                $discomper->addStatusMessage($pos . '/' . count($activeItems) . ' ' . $stoItem['Code'] . ': ' . $stoItem['Name'] . ' update', $sokoban->insertToAbraFlexi() ? 'success' : 'error');
+            } else {
+                $discomper->addStatusMessage($pos . '/' . count($activeItems) . ' ' . $stoItem['Code'] . ': ' . $stoItem['Name'] . ' already iported', 'info');
+            }
+        }
     } else {
         $discomper->addStatusMessage(sprintf(_('Item %s %s does not contain part number. Skipping'), $stoItem['Code'], $stoItem['Name']), 'warning');
+        $skipped++;
     }
 }
+
+$sokoban->addStatusMessage(sprintf(_('New: %d  Updated: %d Skipped: %d Errors: %d'), $new, $updated, $skipped, $errors));
