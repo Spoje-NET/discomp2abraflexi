@@ -169,6 +169,16 @@ class ApiClient extends \Ease\Molecule
     }
 
     /**
+     * Mime Type of last server response
+     *
+     * @return string
+     */
+    public function getResponseMime()
+    {
+        return array_key_exists('content_type', $this->curlInfo) ? $this->curlInfo['content_type'] : 'text/plain' ;
+    }
+
+    /**
      * Curl Error getter
      *
      * @return string
@@ -283,5 +293,11 @@ class ApiClient extends \Ease\Molecule
             'StoItemPriceOrd' => $this->getResultByCode('StoItemPriceOrd', $code),
             'StoItemPriceOrdCur' => $this->getResultByCode('StoItemPriceOrdCur', $code)
         ];
+    }
+
+    public function getImage($baseImageUrl)
+    {
+        $this->doCurlRequest($baseImageUrl);
+        return $this->lastCurlResponse;
     }
 }

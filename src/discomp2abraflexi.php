@@ -44,10 +44,15 @@ $errors = 0;
 
 foreach ($activeItems as $pos => $activeItemData) {
     $storageItem = $discomper->getItemByCode($activeItemData['@attributes']['Code']);
+    $discompItemId = $activeItemData['@attributes']['Id'];
+    $discompItemCode = $activeItemData['@attributes']['Code'];
     if (array_key_exists('StoItem', $storageItem['StoItemBase'])) {
         $stoItem = $storageItem['StoItemBase']['StoItem']['@attributes'];
+        $baseImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseImg'] . $discompItemId;
+        $thumbnailImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseThumbnail'] . $discompItemId;
+
         if (array_key_exists('PartNo', $stoItem)) {
-            $recordCheck = $sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
+            $recordCheck = $sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
             //$newProduct = ($sokoban->lastResponseCode == 404);
             /*
               Id="number | jednoznacna identifikace produktu (aut. cislo), zretezenim s attributy Url* lze dostat vysledny link"
@@ -107,6 +112,11 @@ foreach ($activeItems as $pos => $activeItemData) {
 
             if (empty($recordCheck)) {
                 $discomper->addStatusMessage($pos . '/' . count($activeItems) . ' ' . $stoItem['Code'] . ': ' . $stoItem['Name'] . ' new item', $sokoban->insertToAbraFlexi() ? 'success' : 'error');
+
+                if (\AbraFlexi\Priloha::addAttachment($sokoban, $discompItemCode . '.jpg', $discomper->getImage($baseImageUrl), $discomper->getResponseMime())) {
+                    $sokoban->addStatusMessage($sokoban . ' ' . $baseImageUrl, 'success');
+                }
+
                 if ($sokoban->lastResponseCode == 201) {
                     $new++;
                 } else {
