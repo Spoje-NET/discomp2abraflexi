@@ -286,7 +286,7 @@ class ApiClient extends \Ease\Molecule
           <StoItem Id="119012" Code="20235962" Code2="KOBFS3410" PartNo="FS3410" PriceOrd="153330.0000" />
           </Result>
          */
-        return json_decode(json_encode(new \SimpleXMLElement($this->lastCurlResponse)), true);
+        return json_decode(json_encode(is_bool($this->lastCurlResponse) ? [] : new \SimpleXMLElement($this->lastCurlResponse)), true);
     }
 
     /**
@@ -299,10 +299,10 @@ class ApiClient extends \Ease\Molecule
     {
         return [
             'StoItemBase' => $this->getResultByCode('StoItemBase', $code),
-            'StoItemEAN' => $this->getResultByCode('StoItemEAN', $code),
-            'StoItemPriceEU' => $this->getResultByCode('StoItemPriceEU', $code),
-            'StoItemPriceOrd' => $this->getResultByCode('StoItemPriceOrd', $code),
-            'StoItemPriceOrdCur' => $this->getResultByCode('StoItemPriceOrdCur', $code)
+//            'StoItemEAN' => $this->getResultByCode('StoItemEAN', $code),
+//            'StoItemPriceEU' => $this->getResultByCode('StoItemPriceEU', $code),
+//            'StoItemPriceOrd' => $this->getResultByCode('StoItemPriceOrd', $code),
+//            'StoItemPriceOrdCur' => $this->getResultByCode('StoItemPriceOrdCur', $code)
         ];
     }
 
