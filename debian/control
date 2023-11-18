@@ -12,7 +12,7 @@ Vcs-Browser: https://github.com/Spoje-NET/discomp2abraflexi
 Package: discomp2abraflexi
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, composer-debian, php-cli
 Description: Import Discomp pricelist into AbraFlexi
  Enlist the pricelist items and supplier prices.
 
