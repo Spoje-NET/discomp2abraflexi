@@ -1,0 +1,5 @@
+debian/conf/composer.json       usr/lib/discomp2abraflexi/
+src/*			        usr/share/discomp2abraflexi/
+src/Discomp/*			usr/share/discomp2abraflexi/Discomp/
+bin/*                           usr/bin/
+.env.example                    etc/discomp2abraflexi
