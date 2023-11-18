@@ -5,6 +5,6 @@
 
 override_dh_install:
 	dh_install
-	sed -i -e 's/..\/vendor/\/var\/lib\/discomp2abraflexi/g'   debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/composer\/discomp2abraflexi/g'   debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
 	sed -i -e 's/\.\./\/etc\/discomp2abraflexi/g' 	          debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
 	sed -i -e 's/..\/.env//'                                  debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
