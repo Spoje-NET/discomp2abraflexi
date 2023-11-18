@@ -91,8 +91,8 @@ class ApiClient extends \Ease\Molecule
     /**
      * Discomp Data obtainer
      *
-     * @var string $username - leave empty to use Environment or constant DISCOMP_USERNAME
-     * @var string $password - leave empty to use Environment or constant DISCOMP_PASSWORD
+     * @param string $username - leave empty to use Environment or constant DISCOMP_USERNAME
+     * @param string $password - leave empty to use Environment or constant DISCOMP_PASSWORD
      */
     public function __construct($username = '', $password = '')
     {
@@ -162,7 +162,7 @@ class ApiClient extends \Ease\Molecule
             $msg = sprintf('Curl Error (HTTP %d): %s', $this->lastResponseCode, $this->lastCurlError);
             $this->addStatusMessage($msg, 'error');
             if ($this->throwException) {
-                throw new Exception($msg, $this);
+                throw new \Ease\Exception($msg, $this);
             }
         }
         return $this->lastResponseCode;
@@ -189,12 +189,23 @@ class ApiClient extends \Ease\Molecule
     }
 
     /**
+     * Response code of last HTTP operation
      *
-     * @return
+     * @return int
      */
     public function getLastResponseCode()
     {
         return $this->lastResponseCode;
+    }
+
+    /**
+     * Latest Data obtained
+     *
+     * @return string
+     */
+    public function getLastCurlResponseBody()
+    {
+        return $this->lastCurlResponse;
     }
 
     /**

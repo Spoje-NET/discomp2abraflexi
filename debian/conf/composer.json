@@ -1,0 +1,34 @@
+{
+  "name": "spojenet/discomp2abraflexi",
+  "description": "Import Pricelist from Discomp to AbraFlexi",
+  "type": "project",
+  "version": "0.1.0",
+  "require": {
+    "deb/abraflexi": "*",
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "SpojeNet\\Discomp\\": "/usr/share/discomp2abraflexi/Discomp/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Vítězslav Dvořák",
+      "email": "vitezslav.dvorak@spojenet.cz"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/usr/share/php/EaseCore/"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/AbraFlexi/"
+    }
+  ],
+  "config": {
+    "vendor-dir": "/var/lib/composer/discomp2abraflexi"
+  }
+}

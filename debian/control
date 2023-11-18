@@ -1,0 +1,24 @@
+Source: discomp2abraflexi
+Section: unknown
+Priority: optional
+Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.5.1
+Homepage: https://github.com/Spoje-NET/discomp2abraflexi
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/Spoje-NET/discomp2abraflexi.git
+Vcs-Browser: https://github.com/Spoje-NET/discomp2abraflexi
+
+Package: discomp2abraflexi
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Import Discomp pricelist into AbraFlexi
+ Enlist the pricelist items and supplier prices.
+
+Package: multiflexi-discomp2abraflexi
+Architecture: all
+Multi-Arch: foreign
+Depends: discomp2abraflexi, multiflexi
+Description: Add discomp2abraflexi into MultiFlexi
+ Application Definition for MultiFlexi
