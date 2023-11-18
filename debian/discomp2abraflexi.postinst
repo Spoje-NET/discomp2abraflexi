@@ -3,6 +3,7 @@ set -e
 
 case "$1" in
     configure)
+        composer-debian discomp2abraflexi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
