@@ -11,7 +11,7 @@ namespace SpojeNet;
  * @copyright  2023 Vitex Software
  */
 
-define('APP_NAME', 'Discomp2AbraFlexi');
+define('APP_NAME', 'Discomp2AbraFlexi Init');
 require_once '../vendor/autoload.php';
 \Ease\Shared::init(
     [
@@ -27,9 +27,7 @@ require_once '../vendor/autoload.php';
 );
 
 $importer = new Discomp\Importer();
+$importer->addStatusMessage(_('Supplier Exists'), $importer->ensureSupplierExists() ? 'success' : 'error');
+$importer->addStatusMessage(_('Category Root Exists'), $importer->ensureCategoryRootExists() ? 'success' : 'error');
 
-if (\Ease\Shared::cfg('DISCOMP_SCOPE') == 'all') {
-    $importer->allTimeItems();
-} else {
-    $importer->freshItems();
-}
+//Todo Attach Discomp logo to ROOT

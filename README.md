@@ -11,6 +11,7 @@ Konfigurace
 * `ABRAFLEXI_STORAGE` - Kód výchozího skladu pro import
 * `ABRAFLEXI_DISCOMP_CODE` - Kód pod kterým je Discomp s.r.o. v adresáři 
 
+* `DISCOMP_SCOPE` - V jakém časovém intervalu importovat aktualizace.
 
 * `DISCOMP_USERNAME`
 * `DISCOMP_PASSWORD`

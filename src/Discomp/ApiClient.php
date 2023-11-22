@@ -175,7 +175,7 @@ class ApiClient extends \Ease\Molecule
      */
     public function getResponseMime()
     {
-        return array_key_exists('content_type', $this->curlInfo) ? $this->curlInfo['content_type'] : 'text/plain' ;
+        return array_key_exists('content_type', $this->curlInfo) ? $this->curlInfo['content_type'] : 'text/plain';
     }
 
     /**
@@ -240,6 +240,8 @@ class ApiClient extends \Ease\Molecule
 
     /**
      *
+     * @see https://www.discomp.cz/i6ws/ResultTypeInfo.ashx
+     *
      * @param string $resultType
      *
      * @return array
@@ -247,6 +249,29 @@ class ApiClient extends \Ease\Molecule
     public function getResult($resultType)
     {
         $this->doCurlRequest($this->baseEndpoint . '/GetResult?resultType=' . $resultType);
+        if ($this->lastCurlResponse[0] != '<') {
+            throw new \Exception($this->lastCurlResponse);
+        }
+        return current(self::xml2array(new \SimpleXMLElement(html_entity_decode($this->lastCurlResponse))));
+    }
+
+    /**
+     *
+     * @param string    $resultType
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return array
+     */
+    public function getResultByFromTo(string $resultType, \DateTime $from, \DateTime $to)
+    {
+        $this->doCurlRequest($this->baseEndpoint .
+                '/GetResultByFromTo?resultType=' . $resultType .
+                '&from=' . $from->format('Y-m-d\T00:00:00') .
+                '&to=' . $to->format('Y-m-d\T00:00:00'));
+        if ($this->lastCurlResponse[0] != '<') {
+            throw new \Exception($this->curlInfo['url'] . "\n" . html_entity_decode($this->lastCurlResponse));
+        }
         return current(self::xml2array(new \SimpleXMLElement($this->lastCurlResponse)));
     }
 
@@ -261,7 +286,9 @@ class ApiClient extends \Ease\Molecule
     public function getResultByCode($stoItemBase, $code)
     {
         $this->doCurlRequest($this->baseEndpoint . '/GetResultByCode?resultType=' . $stoItemBase . '&code=' . $code);
-
+        if ($this->lastCurlResponse[0] != '<') {
+            throw new \Exception(html_entity_decode($this->lastCurlResponse));
+        }
 
         /*
           <Result UrlBase="https://www.discomp.cz/default.asp?cls=stoitem&amp;stiid=" UrlBaseThumbnail="https://www.discomp.cz/img.asp?attname=thumbnail&amp;attpedid=52&amp;attsrcid=" UrlBaseImg="https://www.discomp.cz/img.asp?stiid=" UrlBaseEnlargement="https://www.discomp.cz/img.asp?attname=enlargement&amp;attpedid=52&amp;attsrcid=" UrlBaseImgGalery="https://www.discomp.cz/img.asp?attid=" CouCode="CZ" TaxRateLow="15" TaxRateHigh="21">

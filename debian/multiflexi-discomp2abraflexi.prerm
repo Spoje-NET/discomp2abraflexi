@@ -1,0 +1,11 @@
+#!/bin/sh
+# prerm script for discomp2abraflexi
+set -e
+
+. /usr/share/debconf/confmodule
+
+# Iterate over all json files inf usr/lib/discomp2abraflexi/multiflexi
+for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.json`
+do
+	multiflexi-json-app-remover $file
+done
