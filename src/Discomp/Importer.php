@@ -81,6 +81,23 @@ class Importer extends \Ease\Sand
     private $category;
 
     /**
+     *
+     * @var CategoryTree cache
+     */
+    private $treeCache = [];
+
+    /**
+     *
+     * @var  \AbraFlexi\RW
+     */
+    private $atributType;
+    /**
+     *
+     * @var  \AbraFlexi\RW
+     */
+    private $atribut;
+
+    /**
      * Discomp Items Importer
      */
     public function __construct()
@@ -91,6 +108,8 @@ class Importer extends \Ease\Sand
         $this->suplier = \AbraFlexi\RO::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
         $this->pricer = new \AbraFlexi\Dodavatel(['firma' => $this->suplier, 'poznam' => 'Import: ' . \Ease\Shared::AppName() . ' ' . \Ease\Shared::AppVersion()], ['evidence' => 'dodavatel', 'autoload' => false]);
         $this->category = new \AbraFlexi\StromCenik();
+        $this->atribut = new \AbraFlexi\RW(null, ['evidence' => 'atribut']);
+        $this->atributType = new \AbraFlexi\RW(null, ['evidence' => 'typ-atributu']);
 
         if (\Ease\Shared::cfg('APP_DEBUG', false)) {
             $this->logBanner();
@@ -299,10 +318,18 @@ class Importer extends \Ease\Sand
 
             if (array_key_exists('CATEGORIES', $activeItemData)) {
                 foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
-                    $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $category]);
+                    $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
                 }
             } else {
                 $this->addStatusMessage('No category ?!', 'warning');
+            }
+
+            if (array_key_exists('TEXT_PROPERTIES', $activeItemData)) {
+                foreach ($activeItemData['TEXT_PROPERTIES'] as $property) {
+                    list($name, $value) = $property;
+//                    $this->atributType->loadFromAbraFlexi(  );
+                    $this->addStatusMessage($name . ': ' . $value, 'debug');
+                }
             }
 
             $this->updatePrice();
@@ -550,7 +577,7 @@ class Importer extends \Ease\Sand
      */
     public function categoryBranch(array $nodes)
     {
-        $parent = 0;
+        $parent = '';
         foreach ($nodes as $level => $node) {
             $parent = $this->createBranchNode($node, $level, $parent);
         }
@@ -561,13 +588,13 @@ class Importer extends \Ease\Sand
      *
      * @param string $node
      * @param int    $level
-     * @param itn    $parent
+     * @param string $parent
      *
      * @return string
      */
-    public function createBranchNode(string $node, int $level, int $parent)
+    public function createBranchNode(string $node, int $level, string $parent)
     {
-        $kod = \AbraFlexi\RO::code(\Ease\Functions::rip($level . '_' . $node));
+        $kod = \AbraFlexi\RO::code(substr(\Ease\Functions::rip(substr(\AbraFlexi\RO::uncode($parent), 0, 10) . str_replace(' ', '', $node)), 0, 30));
         if (array_key_exists($level, $this->levels)) {
             $this->levels[$level]++;
         } else {
@@ -579,13 +606,15 @@ class Importer extends \Ease\Sand
             $strom->setDataValue('nazev', $node);
             $strom->setDataValue('strom', \AbraFlexi\RO::code(self::$ROOT));
             if ($parent) {
-                $this->setDataValue('otec', $parent);
+                $strom->setDataValue('otec', $parent);
             }
             $strom->setDataValue('poradi', $this->levels[$level]);
-            $strom->insertToAbraFlexi();
-            $strom->addStatusMessage('Create Category ' . $node, $strom->lastResponseCode == 201 ? 'success' : 'error');
+            //$strom->setDataValue('hladina',$level);
+
+            $strom->addStatusMessage('Create Category ' . $node, $strom->sync() ? 'success' : 'error');
         }
-        return $strom->getMyKey();
+        $this->treeCache[$strom->getRecordCode()] = $strom->getMyKey();
+        return $strom->getRecordCode();
     }
 
     /**
