@@ -91,11 +91,18 @@ class Importer extends \Ease\Sand
      * @var  \AbraFlexi\RW
      */
     private $atributType;
+
     /**
      *
      * @var  \AbraFlexi\RW
      */
     private $atribut;
+
+    /**
+     *
+     * @var \AbraFlexi\Adresar
+     */
+    private $suplier;
 
     /**
      * Discomp Items Importer
@@ -109,7 +116,7 @@ class Importer extends \Ease\Sand
         $this->pricer = new \AbraFlexi\Dodavatel(['firma' => $this->suplier, 'poznam' => 'Import: ' . \Ease\Shared::AppName() . ' ' . \Ease\Shared::AppVersion()], ['evidence' => 'dodavatel', 'autoload' => false]);
         $this->category = new \AbraFlexi\StromCenik();
         $this->atribut = new \AbraFlexi\RW(null, ['evidence' => 'atribut']);
-        $this->atributType = new \AbraFlexi\RW(null, ['evidence' => 'typ-atributu']);
+        $this->atributType = new \AbraFlexi\RW(null, ['evidence' => 'typ-atributu','ignore404' => true]);
 
         if (\Ease\Shared::cfg('APP_DEBUG', false)) {
             $this->logBanner();
@@ -178,17 +185,7 @@ class Importer extends \Ease\Sand
             $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material')); //TODO: ???
             $this->sokoban->setDataValue('skladove', true); //TODO: ???
             $this->sokoban->setDataValue('kod', $activeItemData['PART_NUMBER']);
-            $this->sokoban->setDataValue('ean', $activeItemData['CODE']);
-            $this->pricer->unsetDataValue('id');
-            $this->pricer->setDataValue('nakupCena', $activeItemData['PURCHASE_PRICE']); //TODO: Confirm column
-            $this->pricer->setDataValue('mena', \AbraFlexi\RO::code($activeItemData['CURRENCY']));
-            $this->pricer->setDataValue('cenik', \AbraFlexi\RO::code($activeItemData['PART_NUMBER']));
-
-            if (array_key_exists('STOCK', $activeItemData) && array_key_exists('AMOUNT', $activeItemData['STOCK'])) {
-                $this->pricer->setDataValue('sumDostupMj', $activeItemData['STOCK']['AMOUNT']);
-            } else {
-                $this->pricer->setDataValue('sumDostupMj', 0);
-            }
+            $this->sokoban->setDataValue('ean', $discompItemCode);
 
             $this->sokoban->setDataValue('nakupCena', ceil(floatval($activeItemData['PURCHASE_PRICE'])));
             $this->sokoban->setDataValue('nazev', $activeItemData['NAME']);
@@ -216,78 +213,7 @@ class Importer extends \Ease\Sand
               [PRICE_VAT] => 262.57
               [CURRENCY] => CZK
               [AVAILABILITY] => není skladem
-              [CATEGORIES] => Array
-              (
-              [CATEGORY] => Array
-              (
-              [0] => Druhy > Počítače > PC příslušenství > Spotřební materiál > DVD média > DVD+R
-              [1] => Vyrobci - WEB > Verbatim > Počítače > PC příslušenství > Spotřební materiál > DVD média > DVD+R
-              )
 
-              )
-
-              [IMAGES] => Array
-              (
-              [IMAGE] => Array
-              (
-              [0] => https://www.discomp.cz/img.asp?attid=11380
-              [1] => https://www.discomp.cz/img.asp?attid=26081
-              )
-
-              )
-
-              [TEXT_PROPERTIES] => Array
-              (
-              [TEXT_PROPERTY] => Array
-              (
-              [0] => Array
-              (
-              [NAME] => Možnost potisku
-              [VALUE] => Ne
-              )
-
-              [1] => Array
-              (
-              [NAME] => LightScribe
-              [VALUE] => Ne
-              )
-
-              [2] => Array
-              (
-              [NAME] => DL (double-layer)
-              [VALUE] => Ne
-              )
-
-              [3] => Array
-              (
-              [NAME] => Druh balení média
-              [VALUE] => Spindle
-              )
-
-              [4] => Array
-              (
-              [NAME] => Průměr média
-              [VALUE] => 12 cm
-              )
-
-              [5] => Array
-              (
-              [NAME] => Typ DVD média
-              [VALUE] => +R
-              )
-
-              )
-
-              )
-
-              [FLAGS] => Array
-              (
-              [ACTION] => 0
-              [NEW] => 0
-              [TIP] => 0
-              )
-
-              )
              */
 
             if (empty($recordCheck)) {
@@ -326,16 +252,38 @@ class Importer extends \Ease\Sand
 
             if (array_key_exists('TEXT_PROPERTIES', $activeItemData)) {
                 foreach ($activeItemData['TEXT_PROPERTIES'] as $property) {
-                    list($name, $value) = $property;
-//                    $this->atributType->loadFromAbraFlexi(  );
-                    $this->addStatusMessage($name . ': ' . $value, 'debug');
+                    if (count($property) == 2 && key($property) == 'NAME') {
+                        $this->syncProperty($property['NAME'], $property['VALUE']);
+                    } else {
+                        foreach ($property as $prop) {
+                            $this->syncProperty($prop['NAME'], $prop['VALUE']);
+                        }
+                    }
                 }
             }
 
-            $this->updatePrice();
+            $this->updatePrice($activeItemData);
         }
     }
 
+    /**
+     *
+     */
+    public function syncProperty($name, $value)
+    {
+        if (empty($this->atributType->loadFromAbraFlexi(\AbraFlexi\RO::code($name)))) {
+            $this->atributType->addStatusMessage('Attribute ' . $name . ' created', $this->atributType->sync(['kod' => $name, 'nazev' => $name, 'typAtributK' => 'typAtribut.retezec']) ? 'success' : 'error');
+        }
+        $this->atribut->dataReset();
+        $this->atribut->setDataValue('valString', $value);
+        $this->atribut->setDataValue('cenik', $this->sokoban);
+        $this->atribut->setDataValue('typAtributu', $this->atributType);
+        $this->atribut->addStatusMessage($name . ': ' . $value, 'debug');
+    }
+
+    /**
+     * Initial import to fullfill pricelist
+     */
     public function allTimeItems()
     {
         $storageItems = [];
@@ -475,11 +423,29 @@ class Importer extends \Ease\Sand
     /**
      *
      */
-    public function updatePrice()
+    public function updatePrice($activeItemData)
     {
+        $this->pricer->unsetDataValue('id');
+        $this->pricer->setDataValue('cenik', $this->sokoban);
+
+        $priceFound = $this->pricer->loadFromAbraFlexi(['cenik' => $this->sokoban, 'firma' => $this->suplier]);
+        if (empty($priceFound)) {
+            $this->pricer->setDataValue('cenik', $this->sokoban);
+            $this->pricer->setDataValue('firma', $this->suplier);
+        }
+        $this->pricer->setDataValue('nakupCena', $activeItemData['PURCHASE_PRICE']); //TODO: Confirm column
+        $this->pricer->setDataValue('mena', \AbraFlexi\RO::code($activeItemData['CURRENCY']));
+        $this->pricer->setDataValue('cenik', \AbraFlexi\RO::code($activeItemData['PART_NUMBER']));
+
+        if (array_key_exists('STOCK', $activeItemData) && array_key_exists('AMOUNT', $activeItemData['STOCK'])) {
+            $this->pricer->setDataValue('sumDostupMj', $activeItemData['STOCK']['AMOUNT']);
+        } else {
+            $this->pricer->setDataValue('sumDostupMj', 0);
+        }
+
         try {
             $this->pricer->insertToAbraFlexi();
-            $this->pricer->addStatusMessage($this->sokoban->getDataValue('kod') . ': ' . $this->pricer->getDataValue('nakupCena') . ' ' . \AbraFlexi\RO::uncode($this->pricer->getDataValue('mena')), $this->pricer->lastResponseCode == 201 ? 'success' : 'error');
+            $this->pricer->addStatusMessage('supplier price update: ' . $this->sokoban->getDataValue('kod') . ': ' . $this->pricer->getDataValue('nakupCena') . ' ' . \AbraFlexi\RO::uncode($this->pricer->getDataValue('mena')), $this->pricer->lastResponseCode == 201 ? 'success' : 'error');
         } catch (\AbraFlexi\Exception $exc) {
             echo $exc->getTraceAsString();
             $this->errors++;
