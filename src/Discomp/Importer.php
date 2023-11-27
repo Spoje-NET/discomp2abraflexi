@@ -182,6 +182,10 @@ class Importer extends \Ease\Sand
         foreach ($freshItems as $pos => $activeItemData) {
             $discompItemCode = $activeItemData['CODE'];
 
+            if (is_array($activeItemData['PART_NUMBER'])) {
+                $this->addStatusMessage('WTF? ' . json_encode($activeItemData['PART_NUMBER']), 'debug');
+            }
+
             $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER'])]);
 
             $this->sokoban->dataReset();
