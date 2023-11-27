@@ -105,6 +105,12 @@ class Importer extends \Ease\Sand
     private $suplier;
 
     /**
+     * Pricelist Engine
+     * @var \AbraFlexi\Cenik
+     */
+    private $sokoban;
+
+    /**
      * Discomp Items Importer
      */
     public function __construct()
@@ -112,11 +118,12 @@ class Importer extends \Ease\Sand
         $this->setObjectName();
         $this->discomper = new ApiClient();
         $this->sokoban = new \AbraFlexi\Cenik(null, ['ignore404' => true]);
+        $this->sokoban->setObjectName('Pricelist');
         $this->suplier = \AbraFlexi\RO::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
         $this->pricer = new \AbraFlexi\Dodavatel(['firma' => $this->suplier, 'poznam' => 'Import: ' . \Ease\Shared::AppName() . ' ' . \Ease\Shared::AppVersion()], ['evidence' => 'dodavatel', 'autoload' => false]);
         $this->category = new \AbraFlexi\StromCenik();
         $this->atribut = new \AbraFlexi\RW(null, ['evidence' => 'atribut']);
-        $this->atributType = new \AbraFlexi\RW(null, ['evidence' => 'typ-atributu','ignore404' => true]);
+        $this->atributType = new \AbraFlexi\RW(null, ['evidence' => 'typ-atributu', 'ignore404' => true]);
 
         if (\Ease\Shared::cfg('APP_DEBUG', false)) {
             $this->logBanner();
@@ -201,20 +208,9 @@ class Importer extends \Ease\Sand
                 $this->sokoban->setDataValue('popis', $activeItemData['SHORT_DESCRIPTION']);
             }
 
-            /*
-              Array
-              (
-              [MANUFACTURER] => Verbatim
-              [UNIT] => ks
-              [PRICE] => 217.00
-              [STANDARD_PRICE] => 204.00
-              [PURCHASE_PRICE] => 204.00
-              [VAT] => 21
-              [PRICE_VAT] => 262.57
-              [CURRENCY] => CZK
-              [AVAILABILITY] => není skladem
+            $this->sokoban->setDataValue('mj1', \AbraFlexi\RO::code($activeItemData['UNIT']));
 
-             */
+            $this->sokoban->setDataValue('vyrobce', $this->findManufacturerCode($activeItemData['MANUFACTURER']));
 
             if (empty($recordCheck)) {
                 $this->discomper->addStatusMessage($pos . '/' . count($freshItems) . ' ' . $activeItemData['CODE'] . ': ' . $activeItemData['NAME'] . ' new item', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
@@ -253,10 +249,14 @@ class Importer extends \Ease\Sand
             if (array_key_exists('TEXT_PROPERTIES', $activeItemData)) {
                 foreach ($activeItemData['TEXT_PROPERTIES'] as $property) {
                     if (count($property) == 2 && key($property) == 'NAME') {
-                        $this->syncProperty($property['NAME'], $property['VALUE']);
+                        if (strlen($property['NAME'])) {
+                            $this->syncProperty($property['NAME'], $property['VALUE']);
+                        }
                     } else {
                         foreach ($property as $prop) {
-                            $this->syncProperty($prop['NAME'], $prop['VALUE']);
+                            if (strlen($prop['NAME'])) {
+                                $this->syncProperty($prop['NAME'], $prop['VALUE']);
+                            }
                         }
                     }
                 }
@@ -271,14 +271,15 @@ class Importer extends \Ease\Sand
      */
     public function syncProperty($name, $value)
     {
-        if (empty($this->atributType->loadFromAbraFlexi(\AbraFlexi\RO::code($name)))) {
-            $this->atributType->addStatusMessage('Attribute ' . $name . ' created', $this->atributType->sync(['kod' => $name, 'nazev' => $name, 'typAtributK' => 'typAtribut.retezec']) ? 'success' : 'error');
+        $attributeCode = \AbraFlexi\RO::code(mb_substr($name, -20));
+        if (empty($this->atributType->loadFromAbraFlexi($attributeCode))) {
+            $this->atributType->addStatusMessage($this->sokoban . ': Attribute ' . $name . ' created', $this->atributType->sync(['kod' => \AbraFlexi\RO::uncode($attributeCode), 'nazev' => $name, 'typAtributK' => 'typAtribut.retezec']) ? 'success' : 'error');
         }
         $this->atribut->dataReset();
         $this->atribut->setDataValue('valString', $value);
         $this->atribut->setDataValue('cenik', $this->sokoban);
         $this->atribut->setDataValue('typAtributu', $this->atributType);
-        $this->atribut->addStatusMessage($name . ': ' . $value, 'debug');
+        $this->atribut->addStatusMessage($this->sokoban . ': ' . $name . ': ' . $value, $this->atribut->sync() ? 'success' : 'error');
     }
 
     /**
@@ -599,5 +600,20 @@ class Importer extends \Ease\Sand
         ];
         $root = new \AbraFlexi\RW(\AbraFlexi\RO::code(self::$ROOT), ['evidence' => 'strom-koren', 'ignore404' => true]);
         return $root->lastResponseCode == 200 ? true : $root->insertToAbraFlexi($discpmpData);
+    }
+
+    /**
+     *
+     * @param string $manufacturerName
+     * @return \AbraFlex\Adresar
+     */
+    public function findManufacturerCode(string $manufacturerName)
+    {
+        $manufacturerCode = \AbraFlexi\RO::code($manufacturerName);
+        $manufacturer = new \AbraFlexi\Adresar($manufacturerCode, ['ignore404' => true]);
+        if ($manufacturer->lastResponseCode == 404) {
+            $manufacturer->addStatusMessage(sprintf(_('New Manufacturer %s'), $manufacturerName), $manufacturer->sync(['kod' => \AbraFlexi\RO::uncode($manufacturerName), 'nazev' => $manufacturerName]) ? 'success' : 'error');
+        }
+        return $manufacturer;
     }
 }
