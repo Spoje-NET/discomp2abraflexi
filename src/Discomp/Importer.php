@@ -210,7 +210,9 @@ class Importer extends \Ease\Sand
 
             $this->sokoban->setDataValue('mj1', \AbraFlexi\RO::code($activeItemData['UNIT']));
 
-            $this->sokoban->setDataValue('vyrobce', $this->findManufacturerCode($activeItemData['MANUFACTURER']));
+            if ($activeItemData['MANUFACTURER']) {
+                $this->sokoban->setDataValue('vyrobce', $this->findManufacturerCode($activeItemData['MANUFACTURER']));
+            }
 
             if (empty($recordCheck)) {
                 $this->discomper->addStatusMessage($pos . '/' . count($freshItems) . ' ' . $activeItemData['CODE'] . ': ' . $activeItemData['NAME'] . ' new item', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
