@@ -3,5 +3,5 @@ src/*			        usr/share/discomp2abraflexi/
 src/Discomp/*			usr/share/discomp2abraflexi/Discomp/
 bin/*                           usr/bin/
 .env.example                    etc/discomp2abraflexi
-discomp2abraflexi               usr/share/icons/hicolor/scalable/apps/
+discomp2abraflexi.svg           usr/share/icons/hicolor/scalable/apps/
 io.github.spoje_net.discomp2abraflexi.metainfo.xml /usr/share/metainfo/

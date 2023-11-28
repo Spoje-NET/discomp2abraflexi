@@ -24,8 +24,15 @@ Run In Container
 
 https://hub.docker.com/repository/docker/vitexsoftware/discomp2abraflexi
 
+```shell
 docker run --env-file .env vitexsoftware/discomp2abraflexi:latest
+```
+
+```shell
 podman run --env-file .env docker.io/vitexsoftware/discomp2abraflexi:latest
+```
+
+Podman first run output:
 
 ```shell
 $ podman run --env-file .env docker.io/vitexsoftware/discomp2abraflexi:latest
