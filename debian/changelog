@@ -1,6 +1,10 @@
 discomp2abraflexi (0.1.0) UNRELEASED; urgency=low
 
+  [ Vítězslav Dvořák ]
   * Initial release. Closes: #nnnn
     <nnnn is the bug number of your ITP>
+
+  [ vitex ]
+  * 0.2.0 Beta Version
 
  -- Vítězslav Dvořák <info@vitexsoftware.cz>  Sat, 18 Nov 2023 10:46:07 +0100
