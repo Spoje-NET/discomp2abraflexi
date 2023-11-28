@@ -1,4 +1,4 @@
-discomp2abraflexi (0.1.0) UNRELEASED; urgency=low
+discomp2abraflexi (0.2.0) UNRELEASED; urgency=low
 
   [ Vítězslav Dvořák ]
   * Initial release. Closes: #nnnn
@@ -6,5 +6,6 @@ discomp2abraflexi (0.1.0) UNRELEASED; urgency=low
 
   [ vitex ]
   * 0.2.0 Beta Version
+  * Beta
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Sat, 18 Nov 2023 10:46:07 +0100
+ -- vitex <info@vitexsoftware.cz>  Tue, 28 Nov 2023 11:02:59 +0100

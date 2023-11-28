@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>io.github.spoje_net.discomp2abraflexi</id>
+  
+  <name>discomp2abraflexi</name>
+  <summary> Import Discomp pricelist into AbraFlexi </summary>
+  
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  
+  <description>
+    <p>
+      Import Discomp pricelist into AbraFlexi every day
+    </p>
+  </description>
+  
+  <icon type="stock">discomp2abraflexi</icon>
+  
+  <categories>
+    <category>Utility</category>
+    <category>Adult</category>
+  </categories>
+  
+  <provides>
+    <binary>discomp2abraflexi</binary>
+  </provides>
+</component>
+

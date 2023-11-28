@@ -117,6 +117,17 @@ class Importer extends \Ease\Sand
     private $sokoban;
 
     /**
+     *
+     * @var ApiClient
+     */
+    private $discomper;
+    /**
+     *
+     * @var \AbraFlexi\Dodavatel
+     */
+    private $pricer;
+
+    /**
      * Discomp Items Importer
      */
     public function __construct()
