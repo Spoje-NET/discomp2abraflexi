@@ -1,14 +1,25 @@
 #!/bin/sh
 # prerm script for discomp2abraflexi
 set -e
-
 . /usr/share/debconf/confmodule
+case "$1" in
+    remove)
+        APPLICATION=`echo $DPKG_MAINTSCRIPT_PACKAGE | sed 's/multiflexi-//'`
+        for file in `ls /usr/lib/$APPLICATION/multiflexi/*.json`
+        do
+          multiflexi-json-app-remover $file
+        done
+    ;;
 
-# Iterate over all json files inf usr/lib/discomp2abraflexi/multiflexi
-if ["$1" = "remove" ]; then
- for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.json`
- do
-  multiflexi-json-app-remover $file
- done
-fi
+    upgrade|deconfigure)
+    ;;
+
+    failed-upgrade)
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
 
