@@ -5,31 +5,10 @@ set -e
 . /usr/share/debconf/confmodule
 
 # Iterate over all json files inf usr/lib/discomp2abraflexi/multiflexi
-for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.json`
-do
-echo	multiflexi-json-app-remover $file
-done
+if ["$1" == "remove" ]; then
+ for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.json`
+ do
+  multiflexi-json-app-remover $file
+ done
+fi
 
-echo $@
-echo $0 $1
-set
-
-#failed-upgrade 0.1.0.10~bullseye 0.2.0.17~bullseye
-#/var/lib/dpkg/tmp.ci/prerm failed-upgrade
-#DEBCONF_REDIR='1'
-#DEBIAN_HAS_FRONTEND='1'
-#DPKG_ADMINDIR='/var/lib/dpkg'
-#DPKG_COLORS='always'
-#DPKG_FORCE='security-mac,downgrade,remove-protected'
-#DPKG_FRONTEND_LOCKED='true'
-#DPKG_MAINTSCRIPT_ARCH='all'
-#DPKG_MAINTSCRIPT_DEBUG='0'
-#DPKG_MAINTSCRIPT_NAME='prerm'
-#DPKG_MAINTSCRIPT_PACKAGE='multiflexi-discomp2abraflexi'
-#DPKG_MAINTSCRIPT_PACKAGE_REFCOUNT='1'
-#DPKG_ROOT=''
-#DPKG_RUNNING_VERSION='1.21.1'
-#HOME='/root'
-#IFS=' 
-#'
-#LANG='cs_CZ.UTF-8'
