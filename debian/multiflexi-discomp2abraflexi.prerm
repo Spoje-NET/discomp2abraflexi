@@ -7,5 +7,9 @@ set -e
 # Iterate over all json files inf usr/lib/discomp2abraflexi/multiflexi
 for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.json`
 do
-	multiflexi-json-app-remover $file
+echo	multiflexi-json-app-remover $file
 done
+
+echo $@
+echo $0 $1
+set

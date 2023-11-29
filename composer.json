@@ -1,5 +1,5 @@
 {
-    "name": "vitex/discomp2abraflexi",
+    "name": "spojenet/discomp2abraflexi",
     "description": "Import Pricelist from Discomp to AbraFlexi",
     "type": "package",
     "require": {
