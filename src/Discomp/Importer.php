@@ -13,9 +13,10 @@ namespace SpojeNet\Discomp;
 
 use DateTime;
 use Exception;
-use Swoole\MySQL\Exception as Exception2;
 use AbraFlexi\RO;
 use AbraFlexi\RW;
+use WyriHaximus\FileDescriptors\Factory;
+use WyriHaximus\FileDescriptors\ListerInterface;
 
 /**
  * Description of Importer
@@ -88,7 +89,7 @@ class Importer extends \Ease\Sand
 
     /**
      *
-     * @var CategoryTree cache
+     * @var array CategoryTree cache
      */
     private $treeCache = [];
 
@@ -105,8 +106,8 @@ class Importer extends \Ease\Sand
     private $atribut;
 
     /**
-     *
-     * @var \AbraFlexi\Adresar
+     * Supplier code for \AbraFlexi\Adresar
+     * @var string
      */
     private $suplier;
 
@@ -121,6 +122,7 @@ class Importer extends \Ease\Sand
      * @var ApiClient
      */
     private $discomper;
+
     /**
      *
      * @var \AbraFlexi\Dodavatel
@@ -174,7 +176,7 @@ class Importer extends \Ease\Sand
                 'ic' => '25236792',
                 'email' => 'info@discomp.cz'
             ]);
-            $suplierOk = $checker->lastResponseCode == 201;
+            $suplierOk = ($checker->lastResponseCode == 201);
             $this->addStatusMessage('creating ' . $this->suplier, $suplierOk ? 'success' : 'error');
         }
         return $suplierOk;
@@ -194,6 +196,7 @@ class Importer extends \Ease\Sand
 
     public function freshItems()
     {
+        $errors = 0;
         $freshItems = $this->getFreshItems();
         foreach ($freshItems as $pos => $activeItemData) {
             $this->sokoban->dataReset();
@@ -292,6 +295,14 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
+
+            /** @var ListerInterface */
+            $lister = Factory::create();
+            $fileDescriptors = $lister->list(); // Returns an iterable containing a list of open file descriptors for the current process
+
+            foreach ($fileDescriptors as $fileDescriptor) { //Todo Remove After Investigation
+                print_r($fileDescriptor);
+            }
         }
     }
 
@@ -323,6 +334,7 @@ class Importer extends \Ease\Sand
      */
     public function allTimeItems()
     {
+        $errors = 0;
         $storageItems = [];
         $activeItems = $this->discomper->getResult('StoItemActive');
         $this->discomper->addStatusMessage(_('AllTime scope: ') . ' ' . sprintf(_('%d Active Items found'), count($activeItems)), 'success');
@@ -339,48 +351,6 @@ class Importer extends \Ease\Sand
 
                 if (array_key_exists('PartNo', $stoItem)) {
                     $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
-                    //$newProduct = ($sokoban->lastResponseCode == 404);
-                    /*
-                      Id="number | jednoznacna identifikace produktu (aut. cislo), zretezenim s attributy Url* lze dostat vysledny link"
-
-                      CutCode = Celní zařazení
-
-                      Code="string | jednoznacna identifikace produktu jako text (slouzi k vyhledavani a pod.)"
-                      Code2="string | alternativni identifikace produktu"
-                      PartNo="string | kod vyrobce"
-                      PartNo2="string | alternativni kod vyrobce"
-                      Name="string | nazev produktu"
-                      NameAdd="string | dodatkovy nazev produktu"
-                      NameE="string | nazev produktu - mezinarodni verze (napr.: anglicky)"
-                      ManName="string | nazev vyrobce"
-                      PriceDea="number | cena produktu bez pripadnych poplatku(recyklacnich, autorskych) a bez DPH"
-                      PriceRef="number | vysledna hodnota recyklacniho poplatku bez DPH"
-                      RefProName="string | nazev poskytovatele/typu recyklacniho poplatku"
-                      RefCode="string | kod/zatrizeni recyklacniho poplatku"
-                      PriceRef2="number | vysledna hodnota autorskeho poplatku bez DPH"
-                      RefProName2="string | nazev poskytovatele/typu autorskeho poplatku"
-                      RefCode2="string | kod/zatrizeni autorskeho poplatku"
-                      WeightRef="number | vaha vstupujici do vypoctu recyklacniho poplatku"
-                      MeasureRef2="number | pocet jednotek vstupujicich do vypoctu autorskeho poplatku "
-                      TaxRate="number | sazba DPH"
-                      QtyFreeIs="bit | info o produktu skladem ve smyslu ANO/NE"
-                      QtyFree="number | pocet produktu skladem"
-                      QtyPack="number | pocet produktu v baleni"
-                      WarDur="number | doba zaruky prepoctena na dny - pro podnikatele"
-                      WarDurEU="number | doba zaruky prepoctena na dny - pro konc. uzivatele"
-                      SNTrack="bit | informace o tom, jestli se u produktu sleduji seriova cisla"
-                      ThumbnailIs="bit | informace o tom, ma-li produkt obrazek - maly"
-                      ThumbnailSize="number | informace o velikosti obrazku - maly"
-                      ImgIs="bit | informace o tom, ma-li produkt obrazek - bezny"
-                      ImgSize="number | informace o velikosti obrazku - bezny"
-                      EnlargementIs="bit | informace o tom, ma-li produkt obrazek - velky"
-                      EnlargementSize="number | informace o velikosti obrazku - velky"
-                      SisName="string | stav produktu (novinka, vyprodej a pod.)"
-                      NoteShort="string | zkracena poznamka"
-                      Note="string | poznamka"
-                     */
-                    //print_r($storageItem);
-
                     $this->sokoban->dataReset();
                     $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material')); //TODO: ???
                     $this->sokoban->setDataValue('typZasobyK', 'typZasoby.material'); //TODO: ???
@@ -444,7 +414,7 @@ class Importer extends \Ease\Sand
                         }
                     }
 
-                    $this->updatePrice();
+                    $this->updatePrice($stoItem);
                 } else {
                     $this->discomper->addStatusMessage(sprintf(_('Item %s %s does not contain part number. Skipping'), $stoItem['Code'], $stoItem['Name']), 'warning');
                     $this->skipped++;
@@ -493,7 +463,7 @@ class Importer extends \Ease\Sand
      * Prepare processing interval
      *
      * @param string $scope
-     * @throws Exception2
+     * @throws Exception
      */
     public function scopeToInterval($scope)
     {
@@ -553,15 +523,15 @@ class Importer extends \Ease\Sand
 
             default:
                 throw new Exception('Unknown scope ' . $scope);
-                break;
         }
         $this->since = $this->since->setTime(0, 0);
         $this->until = $this->until->setTime(0, 0);
     }
 
     /**
+     * Generate > Path > Of > Categories
      *
-     * @param type $categoriesRaw
+     * @param array $categoriesRaw
      */
     public function prepareCategories($categoriesRaw)
     {
@@ -576,7 +546,8 @@ class Importer extends \Ease\Sand
      * Create ale nodes in category tree
      *
      * @param array $nodes
-     * @return type
+     *
+     * @return string
      */
     public function categoryBranch(array $nodes)
     {
@@ -635,13 +606,14 @@ class Importer extends \Ease\Sand
             'tabulka' => 'cz.winstrom.vo.cen.Cenik',
         ];
         $root = new RW(RO::code(self::$ROOT), ['evidence' => 'strom-koren', 'ignore404' => true]);
-        return $root->lastResponseCode == 200 ? true : $root->insertToAbraFlexi($discpmpData);
+        return $root->lastResponseCode == 200 ? $root->getMyKey() : $root->insertToAbraFlexi($discpmpData);
     }
 
     /**
      *
      * @param string $manufacturerName
-     * @return \AbraFlex\Adresar
+     *
+     * @return \AbraFlexi\Adresar
      */
     public function findManufacturerCode(string $manufacturerName)
     {

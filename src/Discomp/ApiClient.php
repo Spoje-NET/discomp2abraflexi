@@ -72,7 +72,7 @@ class ApiClient extends \Ease\Molecule
 
     /**
      * May be huge response
-     * @var string
+     * @var string|boolean
      */
     private $lastCurlResponse;
 

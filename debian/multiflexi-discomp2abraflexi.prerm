@@ -1,5 +1,5 @@
 #!/bin/sh
-# prerm script for discomp2abraflexi
+# prerm script for multiflexi-discomp2abraflexi
 set -e
 . /usr/share/debconf/confmodule
 case "$1" in
