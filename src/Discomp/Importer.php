@@ -128,6 +128,11 @@ class Importer extends \Ease\Sand
      * @var \AbraFlexi\Dodavatel
      */
     private $pricer;
+    /**
+     *
+     * @var int
+     */
+    private $images = 0;
 
     /**
      * Discomp Items Importer
@@ -251,10 +256,12 @@ class Importer extends \Ease\Sand
                         foreach ($activeItemData['IMAGES']['IMAGE'] as $imgPos => $imgUrl) {
                             $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode . '_' . $imgPos . '.jpg', $this->discomper->getImage($imgUrl), $this->discomper->getResponseMime());
                             $this->sokoban->addStatusMessage(RO::uncode($this->sokoban->getRecordCode()) . ' Img: ' . $imgUrl, $stdImg->lastResponseCode == 201 ? 'success' : 'error');
+                            $this->images++;
                         }
                     } else {
                         $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode . '_' . 0 . '.jpg', $this->discomper->getImage($activeItemData['IMAGES']['IMAGE']), $this->discomper->getResponseMime());
                         $this->sokoban->addStatusMessage(RO::uncode($this->sokoban->getRecordCode()) . ' Img: ' . $activeItemData['IMAGES']['IMAGE'], $stdImg->lastResponseCode == 201 ? 'success' : 'error');
+                        $this->images++;
                     }
                 }
                 if ($this->sokoban->lastResponseCode == 201) {
@@ -300,9 +307,11 @@ class Importer extends \Ease\Sand
             $lister = Factory::create();
             $fileDescriptors = $lister->list(); // Returns an iterable containing a list of open file descriptors for the current process
 
+            $fd = 0;
             foreach ($fileDescriptors as $fileDescriptor) { //Todo Remove After Investigation
-                print_r($fileDescriptor);
+                $fd++;
             }
+            $this->addStatusMessage('Filedescriptors open: ' . $fd . ' images saved: ' . $this->images, 'debug');
         }
     }
 
