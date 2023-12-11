@@ -128,6 +128,7 @@ class Importer extends \Ease\Sand
      * @var \AbraFlexi\Dodavatel
      */
     private $pricer;
+
     /**
      *
      * @var int
@@ -302,16 +303,6 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
-
-            /** @var ListerInterface */
-            $lister = Factory::create();
-            $fileDescriptors = $lister->list(); // Returns an iterable containing a list of open file descriptors for the current process
-
-            $fd = 0;
-            foreach ($fileDescriptors as $fileDescriptor) { //Todo Remove After Investigation
-                $fd++;
-            }
-            $this->addStatusMessage('Filedescriptors open: ' . $fd . ' images saved: ' . $this->images, 'debug');
         }
     }
 
