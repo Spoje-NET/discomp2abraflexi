@@ -205,6 +205,7 @@ class Importer extends \Ease\Sand
         $errors = 0;
         $freshItems = $this->getFreshItems();
         foreach ($freshItems as $pos => $activeItemData) {
+            $this->sokoban->curlInit();
             $this->sokoban->dataReset();
             $discompItemCode = $activeItemData['CODE'];
             $this->sokoban->setObjectName('(' . $pos . '/' . count($freshItems) . ') StoreItem:' . $discompItemCode);
@@ -264,6 +265,7 @@ class Importer extends \Ease\Sand
                         $this->sokoban->addStatusMessage(RO::uncode($this->sokoban->getRecordCode()) . ' Img: ' . $activeItemData['IMAGES']['IMAGE'], $stdImg->lastResponseCode == 201 ? 'success' : 'error');
                         $this->images++;
                     }
+                    unset($stdImg);
                 }
                 if ($this->sokoban->lastResponseCode == 201) {
                     $this->new++;
@@ -278,6 +280,7 @@ class Importer extends \Ease\Sand
                     $this->discomper->addStatusMessage($progressInfo . ' already enlisted', 'info');
                 }
             }
+            $this->removeItemFromTree($this->sokoban);
             if (array_key_exists('CATEGORIES', $activeItemData)) {
                 foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
                     $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
@@ -303,6 +306,7 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
+            $this->sokoban->disconnect();
         }
     }
 
@@ -394,11 +398,11 @@ class Importer extends \Ease\Sand
 
                         if (array_key_exists('ImgIs', $stoItem) && $stoItem['ImgIs'] == 1) {
                             $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode . '.jpg', $this->discomper->getImage($baseImageUrl), $this->discomper->getResponseMime());
-                            $this->sokoban->addStatusMessage($this->sokoban . ' ' . $baseImageUrl, $stdImg->lastResponseCode == 201 ? 'success' : 'error');
+                            // $this->sokoban->addStatusMessage($this->sokoban . ' ' . $baseImageUrl, $stdImg->lastResponseCode == 201 ? 'success' : 'error');
                         }
                         if (array_key_exists('EnlargementIs', $stoItem) && $stoItem['EnlargementIs'] == 1) {
                             $largeImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode . '.jpg', $this->discomper->getImage($largeImageUrl), $this->discomper->getResponseMime());
-                            $this->sokoban->addStatusMessage(\AbraFlexi\RO::uncode($this->sokoban) . ' ' . $largeImageUrl, $largeImg->lastResponseCode == 201 ? 'success' : 'error');
+                            // $this->sokoban->addStatusMessage(\AbraFlexi\RO::uncode($this->sokoban) . ' ' . $largeImageUrl, $largeImg->lastResponseCode == 201 ? 'success' : 'error');
                         }
 
                         if ($this->sokoban->lastResponseCode == 201) {
@@ -553,22 +557,24 @@ class Importer extends \Ease\Sand
     {
         $parent = '';
         foreach ($nodes as $level => $node) {
-            $parent = $this->createBranchNode($node, $level, $parent);
+            $parent = $this->createBranchNode($node, $level, $parent, md5(implode('', array_slice($nodes, 0, $level + 1))));
         }
         return $parent;
     }
 
     /**
+     * Create Branch Node
      *
      * @param string $node
      * @param int    $level
      * @param string $parent
+     * @param srting $kod     focred code for branch
      *
      * @return string
      */
-    public function createBranchNode(string $node, int $level, string $parent)
+    public function createBranchNode(string $node, int $level, string $parent, string $kod)
     {
-        $kod = RO::code(substr(\Ease\Functions::rip(substr(RO::uncode($parent), 0, 10) . str_replace(' ', '', $node)), 0, 30));
+        $kod = RO::code(substr($kod, 0, 30));
         if (array_key_exists($level, $this->levels)) {
             $this->levels[$level]++;
         } else {
@@ -623,5 +629,22 @@ class Importer extends \Ease\Sand
             $manufacturer->addStatusMessage(sprintf(_('New Manufacturer %s'), $manufacturerName), $manufacturer->sync(['kod' => RO::uncode($manufacturerName), 'nazev' => $manufacturerName]) ? 'success' : 'error');
         }
         return $manufacturer;
+    }
+
+    /**
+     * Remove Item from Pricelit Category Tree
+     *
+     * @param \AbraFlexi\Cenik $item
+     */
+    public function removeItemFromTree($item)
+    {
+        $done = 0;
+        $current = $this->category->getColumnsFromAbraFlexi(['id'], ['idZaznamu' => $item->getRecordID()]);
+        foreach ($current as $assigned) {
+            if ($this->category->deleteFromAbraFlexi($assigned['id'])) {
+                $done++;
+            }
+        }
+        return $done;
     }
 }
