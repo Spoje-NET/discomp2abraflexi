@@ -15,8 +15,6 @@ use DateTime;
 use Exception;
 use AbraFlexi\RO;
 use AbraFlexi\RW;
-use WyriHaximus\FileDescriptors\Factory;
-use WyriHaximus\FileDescriptors\ListerInterface;
 
 /**
  * Description of Importer
@@ -205,7 +203,8 @@ class Importer extends \Ease\Sand
         $errors = 0;
         $freshItems = $this->getFreshItems();
         foreach ($freshItems as $pos => $activeItemData) {
-            $this->sokoban->curlInit();
+            $this->sokoban->connectionReset();
+            $this->category->connectionReset();
             $this->sokoban->dataReset();
             $discompItemCode = $activeItemData['CODE'];
             $this->sokoban->setObjectName('(' . $pos . '/' . count($freshItems) . ') StoreItem:' . $discompItemCode);
@@ -306,7 +305,6 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
-            $this->sokoban->disconnect();
         }
     }
 
@@ -436,6 +434,7 @@ class Importer extends \Ease\Sand
      */
     public function updatePrice($activeItemData)
     {
+        $this->pricer->connectionReset();
         $this->pricer->unsetDataValue('id');
         $this->pricer->setDataValue('cenik', $this->sokoban);
         $this->pricer->setDataValue('kodIndi', $activeItemData['CODE']);
