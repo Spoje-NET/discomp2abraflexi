@@ -140,6 +140,19 @@ class Importer extends \Ease\Sand
     {
         $this->setObjectName();
         $this->discomper = new ApiClient();
+        $this->abraFlexiInit();
+        if (\Ease\Shared::cfg('APP_DEBUG', false)) {
+            $this->logBanner();
+        }
+        $this->addStatusMessage(_('Supplier Exists'), $this->ensureSupplierExists() ? 'success' : 'error');
+        $this->addStatusMessage(_('Category Root Exists'), $this->ensureCategoryRootExists() ? 'success' : 'error');
+    }
+
+    /**
+     * Connect to AbraFlexi
+     */
+    public function abraFlexiInit()
+    {
         $this->sokoban = new \AbraFlexi\Cenik(null, ['ignore404' => true]);
         $this->sokoban->setObjectName('Pricelist');
         $this->suplier = \AbraFlexi\RO::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
@@ -148,11 +161,19 @@ class Importer extends \Ease\Sand
         $this->atribut = new RW(null, ['evidence' => 'atribut']);
         $this->atributType = new RW(null, ['evidence' => 'typ-atributu', 'ignore404' => true]);
         $this->atributType->setObjectName('AttributeType');
-        if (\Ease\Shared::cfg('APP_DEBUG', false)) {
-            $this->logBanner();
-        }
-        $this->addStatusMessage(_('Supplier Exists'), $this->ensureSupplierExists() ? 'success' : 'error');
-        $this->addStatusMessage(_('Category Root Exists'), $this->ensureCategoryRootExists() ? 'success' : 'error');
+    }
+
+    /**
+     * Try to free resources
+     */
+    public function abraFlexiDisconnect()
+    {
+        unset($this->sokoban);
+        unset($this->suplier);
+        unset($this->pricer);
+        unset($this->category);
+        unset($this->atribut);
+        unset($this->atributType);
     }
 
     /**
@@ -203,9 +224,9 @@ class Importer extends \Ease\Sand
         $errors = 0;
         $freshItems = $this->getFreshItems();
         foreach ($freshItems as $pos => $activeItemData) {
-            $this->sokoban->connectionReset();
-            $this->category->connectionReset();
-            $this->sokoban->dataReset();
+            $this->abraFlexiDisconnect();
+            $this->abraFlexiInit();
+
             $discompItemCode = $activeItemData['CODE'];
             $this->sokoban->setObjectName('(' . $pos . '/' . count($freshItems) . ') StoreItem:' . $discompItemCode);
 

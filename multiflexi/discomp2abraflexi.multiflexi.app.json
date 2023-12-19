@@ -7,6 +7,7 @@
     "cmdparams": "",
     "deploy": "apt install discomp2abraflexi",
     "homepage": "https:\/\/github.com\/Spoje-NET\/discomp2abraflexi",
+    "ociimage": "docker.io/vitexsoftware/discomp2abraflexi",
     "requirements": "AbraFlexi",
     "environment": {
         "ABRAFLEXI_COMPANY": {
@@ -33,7 +34,6 @@
             "defval": "https:\/\/demo.flexibee.eu:5434",
             "required": true
         },
-
         "ABRAFLEXI_STORAGE": {
             "type": "string",
             "description": "Intial storage Code",
@@ -66,5 +66,4 @@
 	}
     },
     "multiflexi": "1.7.2"
-
 }
