@@ -29,44 +29,26 @@
      showgrid="false"
      showguides="true"
      inkscape:zoom="0.2102413"
-     inkscape:cx="2456.7009"
-     inkscape:cy="1705.1835"
+     inkscape:cx="2432.9187"
+     inkscape:cy="1702.8053"
      inkscape:window-width="1920"
-     inkscape:window-height="1130"
+     inkscape:window-height="1125"
      inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
      id="defs9">
-    <linearGradient
-       id="linearGradient3803"
-       y2="363.44"
-       gradientUnits="userSpaceOnUse"
-       x2="248.5"
-       gradientTransform="matrix(-4.0158893e-4,-0.18031608,-0.18031608,4.0158893e-4,50.502182,200.5)"
-       y1="104.84"
-       x1="187.89"
-       inkscape:collect="always">
-      <stop
-         id="stop3799"
-         style="stop-color:#ffffff"
-         offset="0" />
-      <stop
-         id="stop3801"
-         style="stop-color:#009cf0;stop-opacity:0"
-         offset="1" />
-    </linearGradient>
     <filter
-       y="-0.082560091"
-       height="1.1651202"
+       y="-0.084197339"
+       height="1.1683947"
        inkscape:menu-tooltip="Darkens the edge with an inner blur and adds a flexible glow"
        inkscape:menu="Shadows and Glows"
        inkscape:label="Dark and Glow"
        style="color-interpolation-filters:sRGB;"
        id="filter865"
-       x="-0.02045458"
-       width="1.0409092">
+       x="-0.012506707"
+       width="1.0250134">
       <feGaussianBlur
          stdDeviation="5"
          result="result6"
@@ -93,41 +75,132 @@
          in2="result6"
          id="feBlend863" />
     </filter>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath20">
+      <path
+         d="M 64.09713,512 H 447.9029 c 22.2879,0 30.3701,-2.3206 38.5182,-6.6783 8.1482,-4.3577 14.5429,-10.7524 18.9006,-18.9006 C 509.6794,478.273 512,470.1908 512,447.9029 V 64.09713 C 512,41.80916 509.6794,33.72701 505.3217,25.57886 500.964,17.43071 494.5693,11.03599 486.4211,6.678318 478.273,2.32064 470.1908,0 447.9029,0 H 64.09713 C 41.80916,0 33.72701,2.32064 25.57886,6.678318 17.43071,11.03599 11.03599,17.43071 6.678318,25.57886 2.32064,33.72701 0,41.80916 0,64.09713 V 447.9029 c 0,22.2879 2.32064,30.3701 6.678318,38.5182 4.357672,8.1482 10.752392,14.5429 18.900542,18.9006 8.14815,4.3577 16.2303,6.6783 38.51827,6.6783 z"
+         clip-rule="evenodd"
+         id="path18" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath26">
+      <path
+         d="M 0,0 H 512 V 512 H 0 Z"
+         id="path24" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath36">
+      <path
+         d="M 310.6214,362 424.7089,162.0939 H 310.6961 l -57.0086,99.4988 z"
+         clip-rule="evenodd"
+         id="path34" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath42">
+      <path
+         d="M 0,0 H 512 V 512 H 0 Z"
+         id="path40" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath52">
+      <path
+         d="M 197.1006,362 83.51535,162.0939 H 197.1006 L 310.6214,362 Z"
+         clip-rule="evenodd"
+         id="path50" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath58">
+      <path
+         d="M 0,0 H 512 V 512 H 0 Z"
+         id="path56" />
+    </clipPath>
   </defs>
   <g
      inkscape:label="Vrstva 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;line-height:1.25;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;filter:url(#filter865)"
+       x="859.04004"
+       y="303.41187"
+       id="text548"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="859.04004"
+         y="303.41187"
+         id="tspan706">Import the </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="859.04004"
+         y="391.60638"
+         id="tspan3221">Discomp price list </tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
+         x="859.04004"
+         y="479.80087"
+         id="tspan710">into Abra Flexi</tspan></text>
     <g
-       id="g438"
-       transform="matrix(0.69631689,0,0,0.69631689,-137.78346,444.43419)">
+       id="g2800"
+       transform="matrix(6.3983944,0,0,-6.3983944,8.3148954,583.13557)">
       <g
-         id="g4541"
-         transform="matrix(8.2676512,0,0,-8.2676512,-578.45777,132.15254)">
-        <path
-           d="M 170.868,0 184.246,23.1617 197.617,0 Z"
-           style="fill:#f9ae2d;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1"
-           id="path22"
-           inkscape:connector-curvature="0" />
-        <path
-           d="m 170.868,0 -13.375,23.1617 h 26.753 z"
-           style="fill:#d28b25;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1"
-           id="path24"
-           inkscape:connector-curvature="0" />
-        <path
-           d="m 157.493,23.1617 13.375,23.168 13.378,-23.168 z"
-           style="fill:#936327;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1"
-           id="path26"
-           inkscape:connector-curvature="0" />
-        <path
-           d="M 170.868,46.3297 H 144.121 L 117.365,0 h 26.756 l 26.747,46.3297"
-           style="fill:#767a7c;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.1"
-           id="path28"
-           inkscape:connector-curvature="0" />
+         id="g742"
+         transform="matrix(0.12358533,0,0,0.12358533,13.362157,1.0237774)">
+        <g
+           id="g14">
+          <g
+             id="g16"
+             clip-path="url(#clipPath20)">
+            <g
+               id="g22"
+               clip-path="url(#clipPath26)">
+              <path
+                 d="M -1,513 H 513 V -1 H -1 Z"
+                 style="fill:#f6b102;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                 id="path28" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="g30">
+          <g
+             id="g32"
+             clip-path="url(#clipPath36)">
+            <g
+               id="g38"
+               clip-path="url(#clipPath42)">
+              <path
+                 d="M 252.6875,363 H 425.7089 V 161.0939 H 252.6875 Z"
+                 style="fill:#fdebbf;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                 id="path44" />
+            </g>
+          </g>
+        </g>
+        <g
+           id="g46">
+          <g
+             id="g48"
+             clip-path="url(#clipPath52)">
+            <g
+               id="g54"
+               clip-path="url(#clipPath58)">
+              <path
+                 d="M 82.51535,363 H 311.6214 V 161.0939 H 82.51535 Z"
+                 style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                 id="path60" />
+            </g>
+          </g>
+        </g>
       </g>
       <g
          id="g433"
-         transform="matrix(2.1069844,0,0,-2.1069844,762.56046,-98.88538)">
+         transform="matrix(0.28374388,0,0,0.28374388,50.243663,30.482836)">
         <path
            style="fill:#8e8c8c;stroke-width:0.24"
            d="m 45.299201,135.34391 c -2.1e-4,2.64 0.03488,3.75274 0.07793,2.47276 0.04305,-1.27998 0.04328,-3.43998 4.8e-4,-4.8 -0.0429,-1.36002 -0.0781,-0.31276 -0.07831,2.32724 z M 119.1373,131.2839 c 0.0115,0.2796 0.0684,0.33646 0.145,0.14501 0.0693,-0.17325 0.0608,-0.38025 -0.019,-0.46001 -0.0797,-0.0797 -0.13649,0.062 -0.12607,0.315 z M 2.2851399,133.66391 c 0.00525,0.396 0.05865,0.52894 0.119535,0.29543 0.060825,-0.23351 0.05685,-0.55751 -0.00892,-0.72 -0.0657,-0.16249 -0.1155225,0.0286 -0.1106325,0.42457 z m -59.7878419,0.02 c 0.01155,0.27959 0.0684,0.33646 0.145005,0.145 0.0693,-0.17325 0.06083,-0.38025 -0.0189,-0.46 -0.07976,-0.0797 -0.136477,0.062 -0.126052,0.315 z m 0.978945,0.10001 c 0,0.33 0.05445,0.465 0.121058,0.3 0.0666,-0.165 0.0666,-0.435 0,-0.6 -0.0666,-0.165 -0.121058,-0.03 -0.121058,0.3 z m 147.341052,-0.10001 c 0.01155,0.2796 0.0684,0.33646 0.145005,0.14501 0.0693,-0.17325 0.06082,-0.38025 -0.01897,-0.46001 -0.07975,-0.0797 -0.136485,0.062 -0.126068,0.315 z m -161.658942,2.97998 c -0.391298,0.16814 -0.405,0.20938 -0.07418,0.22313 0.223215,0.009 0.47259,-0.0911 0.554167,-0.22313 0.170558,-0.27597 0.162218,-0.27597 -0.48,0 z m -46.965003,0.16394 c 0.17325,0.0693 0.38025,0.0608 0.46,-0.0189 0.0797,-0.0798 -0.062,-0.13647 -0.315,-0.12605 -0.27959,0.0115 -0.33645,0.0684 -0.145,0.145 z m 27.105002,-0.005 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12105 -0.3,-0.12105 -0.33,0 -0.465,0.0545 -0.3,0.12105 z m 2.16,0.0104 c 0.297,0.0572 0.783,0.0572 1.08,0 0.297,-0.0572 0.054,-0.10401 -0.54,-0.10401 -0.594,0 -0.837,0.0468 -0.54,0.10401 z m 9.615001,-0.005 c 0.17325,0.0693 0.38025,0.0608 0.459997,-0.0189 0.07976,-0.0797 -0.06203,-0.13647 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.144997,0.145 z m 3.825,-0.005 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12105 -0.3,-0.12105 -0.33,0 -0.465,0.0545 -0.3,0.12105 z m 27.615001,0.005 c 0.17325,0.0693 0.38025,0.0608 0.459997,-0.0189 0.07975,-0.0797 -0.06202,-0.13647 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.144997,0.145 z m 15.585,-0.005 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12105 -0.3,-0.12105 -0.33,0 -0.465,0.0545 -0.3,0.12105 z m 9.6,0 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12105 -0.3,-0.12105 -0.33,0 -0.465,0.0545 -0.3,0.12105 z m 10.095,0.005 c 0.17325,0.0693 0.38025,0.0608 0.459998,-0.0189 0.07976,-0.0797 -0.06203,-0.13647 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.144998,0.145 z m 18.480001,0 c 0.17325,0.0693 0.38025,0.0608 0.4599975,-0.0189 0.079755,-0.0797 -0.062025,-0.13647 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.1449975,0.145 z m 49.440001,0 c 0.17325,0.0693 0.38025,0.0608 0.459998,-0.0189 0.07975,-0.0797 -0.06203,-0.13647 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.144998,0.145 z m 4.08,0 c 0.17325,0.0693 0.38025,0.0608 0.459998,-0.0189 0.07975,-0.0797 -0.06202,-0.13647 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.144998,0.145 z m 8.989561,0.002 c 0.23352,0.0608 0.55752,0.0568 0.72,-0.009 0.162502,-0.0658 -0.02858,-0.11552 -0.42456,-0.11063 -0.396,0.005 -0.528938,0.0587 -0.29544,0.11953 z m 2.278245,0.004 c 0.298537,0.0574 0.730537,0.0552 0.96,-0.005 0.22944,-0.0601 -0.01485,-0.10704 -0.542805,-0.10437 -0.528,0.003 -0.715755,0.0518 -0.417195,0.10921 z m 10.332195,-0.006 c 0.173257,0.0693 0.380257,0.0608 0.460005,-0.0189 0.07975,-0.0797 -0.06203,-0.13647 -0.315,-0.12606 -0.2796,0.0115 -0.33645,0.0684 -0.145005,0.145 z m -171.135005,1.67493 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12105 -0.3,-0.12105 -0.33,0 -0.465,0.0545 -0.3,0.12105 z m 159.600005,0 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12105 -0.3,-0.12105 -0.33,0 -0.465,0.0545 -0.3,0.12105 z m -134.522306,11.77576 2.577705,0.0815 0.06585,11.5719 0.06585,11.5719 -0.0038,-11.64 -0.0037,-11.64 -2.64,-0.0134 -2.64,-0.0134 2.577697,0.0815 z m 113.402305,0.002 c 0.693,0.0485 1.827,0.0485 2.52,0 0.693,-0.0485 0.126,-0.0881 -1.26,-0.0881 -1.386,0 -1.953,0.0397 -1.26,0.0881 z m 11.769405,9.8e-4 c 0.830175,0.047 2.126175,0.0466 2.88,-9.8e-4 0.753826,-0.0475 0.07463,-0.0859 -1.509405,-0.0855 -1.584,4.8e-4 -2.20077,0.0393 -1.370595,0.0863 z m 13.367738,-0.003 2.278253,0.0824 0.06585,11.57134 0.06585,11.57133 -0.0038,-11.64 -0.0037,-11.64 -2.340555,-0.0138 -2.340548,-0.0138 2.278245,0.0824 z m 12.416303,-2.4e-4 2.573475,0.0814 0.07642,3.29195 0.07642,3.29195 -0.0098,-3.36 -0.0098,-3.36 -2.64,-0.0134 -2.64,-0.0134 2.573445,0.0814 z m 2.62848,14.99117 c -0.02303,1.54321 0.03907,2.85626 0.138075,2.9179 0.099,0.0616 0.150915,-0.769 0.115343,-1.84584 -0.11652,-3.52818 -0.210743,-3.92685 -0.253418,-1.07206 z m -126.806928,-0.84192 c 0.17325,0.0693 0.38025,0.0608 0.459997,-0.0189 0.07975,-0.0798 -0.06203,-0.13648 -0.315,-0.12606 -0.279585,0.0115 -0.33645,0.0684 -0.144997,0.145 z m 130.545003,3.8351 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12106 -0.3,-0.12106 -0.33,0 -0.465,0.0545 -0.3,0.12106 z m 3.84,0 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12106 -0.3,-0.12106 -0.33,0 -0.465,0.0545 -0.3,0.12106 z m 3.840003,0 c 0.165,0.0666 0.435,0.0666 0.6,0 0.165,-0.0666 0.03,-0.12106 -0.3,-0.12106 -0.33,0 -0.465,0.0545 -0.3,0.12106 z m 19.455,1.445 c 0.17326,0.0693 0.38026,0.0608 0.46,-0.0189 0.0798,-0.0798 -0.062,-0.13647 -0.315,-0.12605 -0.2796,0.0115 -0.33645,0.0684 -0.145,0.145 z m 0.10956,2.40237 c 0.23352,0.0609 0.55752,0.0569 0.72,-0.009 0.1625,-0.0657 -0.0286,-0.11553 -0.42456,-0.11063 -0.396,0.005 -0.52894,0.0587 -0.29544,0.11953 z"
@@ -165,42 +238,6 @@
              id="path174" />
         </g>
       </g>
-      <g
-         id="g1294"
-         transform="matrix(7.4256561,0,0,-7.4256561,699.37442,969.50717)">
-        <path
-           id="path2987"
-           style="fill:#00ff00;stroke:#004101;stroke-width:1.62334;stroke-opacity:1"
-           d="m 33.048699,173.48504 -4.857427,0.0108 -24.8311722,-13.71147 -25.0478478,13.82255 -4.806697,0.0107 -0.02477,-11.12229 29.8997345,-16.50294 29.6442205,16.37033 0.02477,11.12229 z"
-           inkscape:export-ydpi="7.4642339"
-           inkscape:export-filename="C:\Users\John\Desktop\arrow25.png"
-           inkscape:connector-curvature="0"
-           inkscape:export-xdpi="7.4642339" />
-        <path
-           id="path3776"
-           style="fill:url(#linearGradient3803);stroke-width:0.202917"
-           d="m 32.674016,172.89538 -4.316247,0.01 -19.5152843,-10.77551 c 0.3286012,-3.90142 1.5058083,-7.48271 3.2899733,-10.44888 l 20.519952,11.3313 0.02201,9.88368 z"
-           inkscape:export-ydpi="7.4642339"
-           inkscape:export-filename="C:\Users\John\Desktop\arrow25.png"
-           inkscape:connector-curvature="0"
-           inkscape:export-xdpi="7.4642339" />
-      </g>
     </g>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;line-height:1.25;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583;filter:url(#filter865)"
-       x="859.04004"
-       y="303.41187"
-       id="text548"><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="859.04004"
-         y="303.41187"
-         id="tspan706">Import the Discomp price list </tspan><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.5556px;font-family:'UKIJ Mejnuntal';-inkscape-font-specification:'UKIJ Mejnuntal, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
-         x="859.04004"
-         y="391.60635"
-         id="tspan710">into Abra Flexi</tspan></text>
   </g>
 </svg>
