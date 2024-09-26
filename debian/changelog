@@ -1,4 +1,11 @@
-discomp2abraflexi (0.2.0) UNRELEASED; urgency=low
+discomp2abraflexi (0.3.0) UNRELEASED; urgency=medium
+
+  * Strict Types
+  * Logo update
+
+ --  <vitezslav.dvorak@spojenet.cz>  Fri, 27 Sep 2024 00:24:13 +0200
+
+discomp2abraflexi (0.2.0) unstable; urgency=low
 
   [ Vítězslav Dvořák ]
   * Initial release. Closes: #nnnn
@@ -8,4 +15,4 @@ discomp2abraflexi (0.2.0) UNRELEASED; urgency=low
   * 0.2.0 Beta Version
   * Beta
 
- -- vitex <info@vitexsoftware.cz>  Tue, 28 Nov 2023 11:02:59 +0100
+ --  <vitezslav.dvorak@spojenet.cz>  Fri, 27 Sep 2024 00:24:08 +0200
