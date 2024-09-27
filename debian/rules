@@ -8,3 +8,4 @@ override_dh_install:
 	sed -i -e 's/..\/vendor/\/var\/lib\/composer\/discomp2abraflexi/g'   debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
 	sed -i -e 's/\.\./\/etc\/discomp2abraflexi/g' 	          debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
 	sed -i -e 's/..\/.env//'                                  debian/discomp2abraflexi/usr/share/discomp2abraflexi/*.php
+	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"' multiflexi/discomp2abraflexi.multiflexi.app.json | sponge debian/multiflexi-discomp2abraflexi/usr/lib/discomp2abraflexi/multiflexi/discomp2abraflexi.multiflexi.app.json
