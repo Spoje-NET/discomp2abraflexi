@@ -40,7 +40,7 @@ require_once '../vendor/autoload.php';
 $importer = new Discomp\Importer();
 
 try {
-    if (\Ease\Shared::cfg('DISCOMP_SCOPE') === 'all') {
+    if (\Ease\Shared::cfg('DISCOMP_SCOPE', false) === 'all') {
         $importer->allTimeItems();
     } else {
         $importer->freshItems();

@@ -90,13 +90,13 @@ class ApiClient extends \Ease\Molecule
     {
         $this->apiUsername = \strlen($username) ? $username : \Ease\Shared::cfg('DISCOMP_USERNAME');
         $this->apiPassword = \strlen($password) ? $password : \Ease\Shared::cfg('DISCOMP_PASSWORD');
-        $this->debug = \Ease\Shared::cfg('DISCOMP_API_DEBUG', false);
+        $this->debug = strtolower((string) \Ease\Shared::cfg('DISCOMP_API_DEBUG', false)) === 'True';
         $this->curlInit();
         $this->setObjectName();
     }
 
     /**
-     * Close Curl Handle before serizaliation.
+     * Close Curl Handle before serialization.
      */
     public function __destruct()
     {

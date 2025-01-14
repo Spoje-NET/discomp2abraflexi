@@ -41,31 +41,49 @@
             "description": "Intial storage Code",
             "defval": "SKLAD",
             "required": false
-	},
+        },
         "ABRAFLEXI_DISCOMP_CODE": {
             "type": "string",
             "description": "Discomp Addressbook Code",
             "defval": "DISCOMP",
             "required": false
-	},
+        },
         "DISCOMP_USERNAME": {
             "type": "string",
             "description": "Your Discomp username",
             "defval": "",
             "required": true
-	},
+        },
         "DISCOMP_PASSWORD": {
             "type": "password",
             "description": "Your Discomp password",
             "defval": "",
             "required": true
-	},
+        },
         "DISCOMP_TYP_ZASOBY": {
             "type": "string",
             "description": "Intial storage Code",
             "defval": "typZasoby.material",
             "required": false
-	}
+        },
+        "DISCOMP_API_DEBUG": {
+            "type": "checkbox",
+            "description": "Show API debug messages",
+            "defval": "False",
+            "required": false
+        },
+        "APP_DEBUG": {
+            "type": "checkbox",
+            "description": "Show debug messages",
+            "defval": "False",
+            "required": false
+        },
+        "EASE_LOGGER": {
+            "type": "string",
+            "description": "Logger type",
+            "defval": "syslog|console",
+            "required": false
+        }
     },
-    "multiflexi": "1.7.2"
+    "multiflexi": "1.20"
 }
