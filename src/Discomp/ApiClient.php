@@ -266,10 +266,14 @@ class ApiClient extends \Ease\Molecule
      */
     public function getResultByFromTo(string $resultType, \DateTime $from, \DateTime $to)
     {
-        $this->doCurlRequest($this->baseEndpoint.
+        $exitCode = $this->doCurlRequest($this->baseEndpoint.
                 '/GetResultByFromTo?resultType='.$resultType.
                 '&from='.$from->format('Y-m-d\T00:00:00').
                 '&to='.$to->format('Y-m-d\T00:00:00'));
+
+        if ($exitCode !== 200) {
+            throw new \Exception($this->curlInfo['url']."\n".html_entity_decode($this->lastCurlResponse), $exitCode);
+        }
 
         if ($this->lastCurlResponse[0] !== '<') {
             throw new \Exception($this->curlInfo['url']."\n".html_entity_decode($this->lastCurlResponse));

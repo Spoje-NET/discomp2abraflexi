@@ -19,7 +19,7 @@ namespace SpojeNet;
  * Discomp pricelist importer to AbraFlexi.
  *
  * @author     Vítězslav Dvořák <info@vitexsoftware.cz>
- * @copyright  2023 Vitex Software
+ * @copyright  2023-2025 Vitex Software
  */
 \define('APP_NAME', 'Discomp2AbraFlexi');
 
@@ -39,8 +39,14 @@ require_once '../vendor/autoload.php';
 
 $importer = new Discomp\Importer();
 
-if (\Ease\Shared::cfg('DISCOMP_SCOPE') === 'all') {
-    $importer->allTimeItems();
-} else {
-    $importer->freshItems();
+try {
+    if (\Ease\Shared::cfg('DISCOMP_SCOPE') === 'all') {
+        $importer->allTimeItems();
+    } else {
+        $importer->freshItems();
+    }
+} catch (\Exception $exc) {
+    $importer->addStatusMessage($exc->getMessage(), 'error');
+
+    exit($exc->getCode());
 }

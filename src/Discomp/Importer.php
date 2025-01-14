@@ -515,7 +515,20 @@ class Importer extends \Ease\Sand
                 break;
 
             default:
-                throw new \Exception('Unknown scope '.$scope);
+                if (strstr($scope, '>')) {
+                    [$begin, $end] = explode('>', $scope);
+                    $this->since = new \DateTime($begin);
+                    $this->until = new \DateTime($end);
+                } else {
+                    if (preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $scope)) {
+                        $this->since = new \DateTime($scope);
+                        $this->until = (new \DateTime($scope))->setTime(23, 59, 59, 999);
+
+                        break;
+                    }
+
+                    throw new \Exception('Unknown scope '.$scope);
+                }
         }
 
         $this->since = $this->since->setTime(0, 0);
