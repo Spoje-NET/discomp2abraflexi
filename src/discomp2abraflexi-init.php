@@ -19,7 +19,7 @@ namespace SpojeNet;
  * Discomp pricelist importer to AbraFlexi.
  *
  * @author     Vítězslav Dvořák <info@vitexsoftware.cz>
- * @copyright  2023 Vitex Software
+ * @copyright  2023-2025 SpojeNet
  */
 \define('APP_NAME', 'Discomp2AbraFlexi Init');
 

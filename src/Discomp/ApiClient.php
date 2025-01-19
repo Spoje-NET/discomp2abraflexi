@@ -29,7 +29,7 @@ class ApiClient extends \Ease\Molecule
     /**
      * Discomp URI.
      */
-    public string $baseEndpoint = 'https://WWW.discomp.CZ/i6ws/default.asmx';
+    public string $baseEndpoint = 'https://www.discomp.cz/i6ws/default.asmx';
 
     /**
      * Throw Exception on error ?
@@ -101,6 +101,11 @@ class ApiClient extends \Ease\Molecule
     public function __destruct()
     {
         $this->disconnect();
+    }
+
+    public function getUsername(): string
+    {
+        return $this->apiUsername;
     }
 
     /**

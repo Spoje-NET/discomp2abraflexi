@@ -28,7 +28,7 @@ class Importer extends \Ease\Sand
     use \Ease\Logger\Logging;
     public \DateTime $since;
     public \DateTime $until;
-    public ApiClient $discpomper;
+    public ApiClient $discomper;
 
     /**
      * Discomp Tree Root.
@@ -57,7 +57,6 @@ class Importer extends \Ease\Sand
      * Pricelist Engine.
      */
     private ?\AbraFlexi\Cenik $sokoban;
-    private ApiClient $discomper;
     private ?\AbraFlexi\Dodavatel $pricer;
     private int $images = 0;
 
@@ -71,7 +70,7 @@ class Importer extends \Ease\Sand
         $this->abraFlexiInit();
 
         if (\Ease\Shared::cfg('APP_DEBUG', false)) {
-            $this->logBanner();
+            $this->logBanner('Login: '.$this->discomper->getUsername());
         }
 
         $this->addStatusMessage(_('Supplier Exists'), $this->ensureSupplierExists() ? 'success' : 'error');
