@@ -24,12 +24,14 @@ cs: ## Update Coding Standards
 	vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --diff --verbose
 
 
+.PHONY: buildimage
+buildimage: ## Build simple docker image
+	docker build -t vitexsoftware/discomp2abraflexi:latest .
 
-buildimage:
-    docker build -t vitexsoftware/discomp2abraflexi:latest .
+.PHONY: buildx
+buildx: ## Build multiarch image
+	docker buildx build . --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag vitexsoftware/discomp2abraflexi:latest
 
-buildx:
-    docker buildx build . --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag vitexsoftware/discomp2abraflexi:latest
-
-drun:
+.PHONY: drun
+drun: ## Run Docker container
     docker run --env-file .env vitexsoftware/discomp2abraflexi:latest
