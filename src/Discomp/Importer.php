@@ -247,8 +247,12 @@ class Importer extends \Ease\Sand
             $this->removeItemFromTree($this->sokoban);
 
             if (\array_key_exists('CATEGORIES', $activeItemData)) {
-                foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
-                    $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
+                if (\array_key_exists('CATEGORY', $activeItemData['CATEGORIES'])) {
+                    foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
+                        $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
+                    }
+                } else {
+                    $this->category->addStatusMessage('Bad Category structure: '.json_encode($activeItemData['CATEGORIES']), 'warning');
                 }
             } else {
                 $this->addStatusMessage('No category ?!', 'warning');
