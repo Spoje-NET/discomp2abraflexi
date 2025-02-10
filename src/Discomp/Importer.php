@@ -211,6 +211,8 @@ class Importer extends \Ease\Sand
                 $this->sokoban->setDataValue('vyrobce', $this->findManufacturerCode($activeItemData['MANUFACTURER']));
             }
 
+            $result[$this->sokoban->getRecordCode()] = ['name' => $this->sokoban->getDataValue('nazev')];
+
             if (empty($recordCheck)) {
                 $this->discomper->addStatusMessage($activeItemData['CODE'].': '.$activeItemData['NAME'].' new item', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
 
@@ -231,9 +233,12 @@ class Importer extends \Ease\Sand
                 }
 
                 if ($this->sokoban->lastResponseCode === 201) {
+                    $result[$this->sokoban->getRecordCode()]['status'] = 'success';
                     ++$this->new;
                 } else {
                     ++$errors;
+                    $result[$this->sokoban->getRecordCode()] = $this->sokoban->getData();
+                    $result[$this->sokoban->getRecordCode()]['status'] = 'failed';
                 }
             } else {
                 $progressInfo = '('.$pos.'/'.\count($freshItems).') '.$activeItemData['CODE'].': '.$activeItemData['NAME'];
@@ -325,98 +330,102 @@ class Importer extends \Ease\Sand
         $activeItems = $this->discomper->getResult('StoItemActive');
         $this->discomper->addStatusMessage(_('AllTime scope: ').' '.sprintf(_('%d Active Items found'), \count($activeItems)), 'success');
 
-        foreach ($activeItems as $pos => $activeItemData) {
-            $storageItem = $this->discomper->getItemByCode($activeItemData['@attributes']['Code']);
-            $discompItemId = $activeItemData['@attributes']['Id'];
-            $discompItemCode = $activeItemData['@attributes']['Code'];
+        if (\array_key_exists('title', $activeItems)) {
+            $result = $activeItems;
+        } else {
+            foreach ($activeItems as $pos => $activeItemData) {
+                $storageItem = $this->discomper->getItemByCode($activeItemData['@attributes']['Code']);
+                $discompItemId = $activeItemData['@attributes']['Id'];
+                $discompItemCode = $activeItemData['@attributes']['Code'];
 
-            if (\array_key_exists('StoItem', $storageItem['StoItemBase'])) {
-                $stoItem = $storageItem['StoItemBase']['StoItem']['@attributes'];
-                $baseImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseImg'].$discompItemId;
-                $thumbnailImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseThumbnail'].$discompItemId;
-                $largeImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseEnlargement'].$discompItemId;
+                if (\array_key_exists('StoItem', $storageItem['StoItemBase'])) {
+                    $stoItem = $storageItem['StoItemBase']['StoItem']['@attributes'];
+                    $baseImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseImg'].$discompItemId;
+                    $thumbnailImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseThumbnail'].$discompItemId;
+                    $largeImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseEnlargement'].$discompItemId;
 
-                if (\array_key_exists('PartNo', $stoItem)) {
-                    $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
-                    $this->sokoban->dataReset();
-                    $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material')); // TODO: ???
-                    $this->sokoban->setDataValue('typZasobyK', 'typZasoby.material'); // TODO: ???
-                    $this->sokoban->setDataValue('skladove', true); // TODO: ???
-                    $this->sokoban->setDataValue('kod', $stoItem['PartNo']);
-                    $this->pricer->unsetDataValue('id');
-                    $this->pricer->setDataValue('cenik', \AbraFlexi\RO::code($stoItem['PartNo']));
-                    $this->pricer->setDataValue('nakupCena', $stoItem['PriceOrd']);
+                    if (\array_key_exists('PartNo', $stoItem)) {
+                        $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
+                        $this->sokoban->dataReset();
+                        $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material')); // TODO: ???
+                        $this->sokoban->setDataValue('typZasobyK', 'typZasoby.material'); // TODO: ???
+                        $this->sokoban->setDataValue('skladove', true); // TODO: ???
+                        $this->sokoban->setDataValue('kod', $stoItem['PartNo']);
+                        $this->pricer->unsetDataValue('id');
+                        $this->pricer->setDataValue('cenik', \AbraFlexi\RO::code($stoItem['PartNo']));
+                        $this->pricer->setDataValue('nakupCena', $stoItem['PriceOrd']);
 
-                    if (\array_key_exists('QtyFree', $stoItem)) {
-                        $this->pricer->setDataValue('stavMJ', $stoItem['QtyFree']);
-                    } else {
-                        $this->pricer->setDataValue('stavMJ', 0);
-                    }
-
-                    $this->sokoban->setDataValue('nakupCena', ceil($stoItem['PriceDea'] + $stoItem['PriceRef']));
-                    $this->sokoban->setDataValue('ean', $stoItem['Code']);
-                    $this->sokoban->setDataValue('nazev', $stoItem['Name']);
-
-                    if (\array_key_exists('WarDur', $stoItem)) {
-                        $this->sokoban->setDataValue('zaruka', $stoItem['WarDur']);
-                    }
-
-                    $this->sokoban->setDataValue('mjZarukyK', 'mjZaruky.den');
-
-                    if (\array_key_exists('Weight', $stoItem)) {
-                        $this->sokoban->setDataValue('hmotMj', $stoItem['Weight']);
-                    }
-
-                    if (\array_key_exists('NameE', $stoItem)) {
-                        $this->sokoban->setDataValue('nazevA', $stoItem['NameE']);
-                    }
-
-                    if (\array_key_exists('NoteShort', $stoItem)) {
-                        $this->sokoban->setDataValue('popis', $stoItem['NoteShort']);
-                    }
-
-                    //    if(array_key_exists('Note', $stoItem)){
-                    //        $sokoban->setDataValue('popis',$stoItem['Note']); //TODO: Source contains HTML markup
-                    //    }
-                    $this->sokoban->setDataValue('dodavatel', $this->suplier);
-
-                    if (empty($recordCheck)) {
-                        $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' new item', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
-
-                        if (\array_key_exists('ImgIs', $stoItem) && $stoItem['ImgIs'] === 1) {
-                            $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'.jpg', $this->discomper->getImage($baseImageUrl), $this->discomper->getResponseMime());
-                            // $this->sokoban->addStatusMessage($this->sokoban . ' ' . $baseImageUrl, $stdImg->lastResponseCode == 201 ? 'success' : 'error');
-                        }
-
-                        if (\array_key_exists('EnlargementIs', $stoItem) && $stoItem['EnlargementIs'] === 1) {
-                            $largeImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'.jpg', $this->discomper->getImage($largeImageUrl), $this->discomper->getResponseMime());
-                            // $this->sokoban->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban) . ' ' . $largeImageUrl, $largeImg->lastResponseCode == 201 ? 'success' : 'error');
-                        }
-
-                        if ($this->sokoban->lastResponseCode === 201) {
-                            ++$this->new;
+                        if (\array_key_exists('QtyFree', $stoItem)) {
+                            $this->pricer->setDataValue('stavMJ', $stoItem['QtyFree']);
                         } else {
-                            ++$errors;
+                            $this->pricer->setDataValue('stavMJ', 0);
                         }
-                    } else {
-                        if (\array_key_exists('dodavatel', $recordCheck) && ($recordCheck['dodavatel'] === $this->suplier)) {
-                            $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' update', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
-                        } else {
-                            $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' already iported', 'info');
-                        }
-                    }
 
-                    $this->updatePrice($stoItem);
+                        $this->sokoban->setDataValue('nakupCena', ceil($stoItem['PriceDea'] + $stoItem['PriceRef']));
+                        $this->sokoban->setDataValue('ean', $stoItem['Code']);
+                        $this->sokoban->setDataValue('nazev', $stoItem['Name']);
+
+                        if (\array_key_exists('WarDur', $stoItem)) {
+                            $this->sokoban->setDataValue('zaruka', $stoItem['WarDur']);
+                        }
+
+                        $this->sokoban->setDataValue('mjZarukyK', 'mjZaruky.den');
+
+                        if (\array_key_exists('Weight', $stoItem)) {
+                            $this->sokoban->setDataValue('hmotMj', $stoItem['Weight']);
+                        }
+
+                        if (\array_key_exists('NameE', $stoItem)) {
+                            $this->sokoban->setDataValue('nazevA', $stoItem['NameE']);
+                        }
+
+                        if (\array_key_exists('NoteShort', $stoItem)) {
+                            $this->sokoban->setDataValue('popis', $stoItem['NoteShort']);
+                        }
+
+                        //    if(array_key_exists('Note', $stoItem)){
+                        //        $sokoban->setDataValue('popis',$stoItem['Note']); //TODO: Source contains HTML markup
+                        //    }
+                        $this->sokoban->setDataValue('dodavatel', $this->suplier);
+
+                        if (empty($recordCheck)) {
+                            $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' new item', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
+
+                            if (\array_key_exists('ImgIs', $stoItem) && $stoItem['ImgIs'] === 1) {
+                                $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'.jpg', $this->discomper->getImage($baseImageUrl), $this->discomper->getResponseMime());
+                                // $this->sokoban->addStatusMessage($this->sokoban . ' ' . $baseImageUrl, $stdImg->lastResponseCode == 201 ? 'success' : 'error');
+                            }
+
+                            if (\array_key_exists('EnlargementIs', $stoItem) && $stoItem['EnlargementIs'] === 1) {
+                                $largeImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'.jpg', $this->discomper->getImage($largeImageUrl), $this->discomper->getResponseMime());
+                                // $this->sokoban->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban) . ' ' . $largeImageUrl, $largeImg->lastResponseCode == 201 ? 'success' : 'error');
+                            }
+
+                            if ($this->sokoban->lastResponseCode === 201) {
+                                ++$this->new;
+                            } else {
+                                ++$errors;
+                            }
+                        } else {
+                            if (\array_key_exists('dodavatel', $recordCheck) && ($recordCheck['dodavatel'] === $this->suplier)) {
+                                $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' update', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
+                            } else {
+                                $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' already iported', 'info');
+                            }
+                        }
+
+                        $this->updatePrice($stoItem);
+                    } else {
+                        $this->discomper->addStatusMessage(sprintf(_('Item %s %s does not contain part number. Skipping'), $stoItem['Code'], $stoItem['Name']), 'warning');
+                        ++$this->skipped;
+                    }
                 } else {
-                    $this->discomper->addStatusMessage(sprintf(_('Item %s %s does not contain part number. Skipping'), $stoItem['Code'], $stoItem['Name']), 'warning');
-                    ++$this->skipped;
+                    $this->discomper->addStatusMessage('Unparsable Response: '.$this->discomper->getLastCurlResponseBody(), 'debug');
                 }
-            } else {
-                $this->discomper->addStatusMessage('Unparsable Response: '.$this->discomper->getLastCurlResponseBody(), 'debug');
             }
-        }
 
-        $this->sokoban->addStatusMessage(sprintf(_('New: %d  Updated: %d Skipped: %d Errors: %d'), $this->new, $this->updated, $this->skipped, $this->errors));
+            $this->sokoban->addStatusMessage(sprintf(_('New: %d  Updated: %d Skipped: %d Errors: %d'), $this->new, $this->updated, $this->skipped, $this->errors));
+        }
 
         return $result;
     }
