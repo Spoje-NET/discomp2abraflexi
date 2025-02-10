@@ -16,3 +16,4 @@
 /debian/multiflexi-discomp2abraflexi.debhelper.log
 /debian/multiflexi-discomp2abraflexi.substvars
 /.build/
+/.vscode/

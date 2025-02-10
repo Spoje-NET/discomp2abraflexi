@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace SpojeNet;
 
+use Ease\Shared;
+
 /**
  * Discomp pricelist importer to AbraFlexi.
  *
@@ -24,7 +26,12 @@ namespace SpojeNet;
 \define('APP_NAME', 'Discomp2AbraFlexi');
 
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(
+
+/**
+ * Get today's Statements list.
+ */
+$options = getopt('o::e::', ['output::environment::']);
+Shared::init(
     [
         'ABRAFLEXI_URL',
         'ABRAFLEXI_LOGIN',
@@ -34,19 +41,27 @@ require_once '../vendor/autoload.php';
         'DISCOMP_USERNAME',
         'DISCOMP_PASSWORD',
     ],
-    '../.env',
+    \array_key_exists('environment', $options) ? $options['environment'] : (\array_key_exists('e', $options) ? $options['e'] : '../.env'),
 );
+$destination = \array_key_exists('o', $options) ? $options['o'] : (\array_key_exists('output', $options) ? $options['output'] : \Ease\Shared::cfg('RESULT_FILE', 'php://stdout'));
 
 $importer = new Discomp\Importer();
 
 try {
     if (\Ease\Shared::cfg('DISCOMP_SCOPE', false) === 'all') {
-        $importer->allTimeItems();
+        $report = $importer->allTimeItems();
     } else {
-        $importer->freshItems();
+        $report = $importer->freshItems();
     }
 } catch (\Exception $exc) {
-    $importer->addStatusMessage($exc->getMessage(), 'error');
+    $report['message'] = $exc->getMessage();
+    $importer->addStatusMessage($report['message'], 'error');
 
-    exit($exc->getCode());
+    $exitcode = $exc->getCode();
 }
+
+$report['exitcode'] = $exitcode;
+$written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
+$importer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
+
+exit($exitcode);

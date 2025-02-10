@@ -72,6 +72,12 @@
             "defval": "False",
             "required": false
         },
+        "RESULT_FILE": {
+            "type": "string",
+            "description": "write output json data to",
+            "defval": "discomp_pricelist_for_{DISCOMP_USERNAME}.json",
+            "required": false
+        },
         "APP_DEBUG": {
             "type": "checkbox",
             "description": "Show debug messages",

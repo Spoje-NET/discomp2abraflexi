@@ -150,8 +150,9 @@ class Importer extends \Ease\Sand
         return $freshItems;
     }
 
-    public function freshItems(): void
+    public function freshItems(): array
     {
+        $result = [];
         $errors = 0;
         $freshItems = $this->getFreshItems();
 
@@ -276,6 +277,8 @@ class Importer extends \Ease\Sand
 
             $this->updatePrice($activeItemData);
         }
+
+        return $result;
     }
 
     /**
@@ -314,8 +317,9 @@ class Importer extends \Ease\Sand
     /**
      * Initial import to fullfill pricelist.
      */
-    public function allTimeItems(): void
+    public function allTimeItems(): array
     {
+        $result = [];
         $errors = 0;
         $storageItems = [];
         $activeItems = $this->discomper->getResult('StoItemActive');
@@ -413,6 +417,8 @@ class Importer extends \Ease\Sand
         }
 
         $this->sokoban->addStatusMessage(sprintf(_('New: %d  Updated: %d Skipped: %d Errors: %d'), $this->new, $this->updated, $this->skipped, $this->errors));
+
+        return $result;
     }
 
     /**
