@@ -254,8 +254,12 @@ class Importer extends \Ease\Sand
 
             if (\array_key_exists('CATEGORIES', $activeItemData)) {
                 if (\array_key_exists('CATEGORY', $activeItemData['CATEGORIES'])) {
-                    foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
-                        $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
+                    if (\is_array($activeItemData['CATEGORIES']['CATEGORY'])) {
+                        foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
+                            $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
+                        }
+                    } else {
+                        $this->category->addStatusMessage('Bad Category hierarchy: '.json_encode($activeItemData['CATEGORIES']['CATEGORY']), 'warning');
                     }
                 } else {
                     $this->category->addStatusMessage('Bad Category structure: '.json_encode($activeItemData['CATEGORIES']), 'warning');

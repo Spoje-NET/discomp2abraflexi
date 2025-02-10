@@ -72,6 +72,34 @@
             "defval": "False",
             "required": false
         },
+        "DISCOMP_SCOPE": {
+            "type": "string",
+            "description": "Import Scope",
+            "defval": "yesterday",
+            "required": false,
+            "options": {
+                "today": "today",
+                "yesterday": "yesterday",
+                "last_week": "last_week",
+                "last_month": "last_month",
+                "last_two_months": "last_two_months",
+                "previous_month": "previous_month",
+                "two_months_ago": "two_months_ago",
+                "this_year": "this_year",
+                "january": "January",
+                "february": "February",
+                "march": "March",
+                "april": "April",
+                "may": "May",
+                "june": "June",
+                "july": "July",
+                "august": "August",
+                "september": "September",
+                "october": "October",
+                "november": "November",
+                "december": "December"
+            }
+        },
         "RESULT_FILE": {
             "type": "string",
             "description": "write output json data to",
