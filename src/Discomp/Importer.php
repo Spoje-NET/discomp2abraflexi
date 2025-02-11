@@ -163,7 +163,7 @@ class Importer extends \Ease\Sand
             $discompItemCode = $activeItemData['CODE'];
             $this->sokoban->setObjectName('('.$pos.'/'.\count($freshItems).') StoreItem:'.$discompItemCode);
 
-            if (\is_array($activeItemData['PART_NUMBER'])) {
+            if (!array_key_exists('PART_NUMBER', $activeItemData) || \is_array($activeItemData['PART_NUMBER'])) {
                 $this->sokoban->addStatusMessage('WTF? '.json_encode($activeItemData['PART_NUMBER']), 'debug');
 
                 continue;
