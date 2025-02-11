@@ -164,7 +164,7 @@ class Importer extends \Ease\Sand
             $this->sokoban->setObjectName('('.$pos.'/'.\count($freshItems).') StoreItem:'.$discompItemCode);
 
             if (!array_key_exists('PART_NUMBER', $activeItemData) || \is_array($activeItemData['PART_NUMBER'])) {
-                $this->sokoban->addStatusMessage('WTF? '.json_encode($activeItemData['PART_NUMBER']), 'debug');
+                $this->sokoban->addStatusMessage('NO PART_NUMBER !? '.json_encode($activeItemData), 'debug');
 
                 continue;
             }
