@@ -84,7 +84,7 @@ class Importer extends \Ease\Sand
     {
         $this->sokoban = new \AbraFlexi\Cenik(null, ['ignore404' => true]);
         $this->sokoban->setObjectName('Pricelist');
-        $this->suplier = \AbraFlexi\RO::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
+        $this->suplier = \AbraFlexi\Functions::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
         $this->pricer = new \AbraFlexi\Dodavatel(['firma' => $this->suplier, 'poznam' => 'Import: '.\Ease\Shared::AppName().' '.\Ease\Shared::AppVersion()."\nhttps://github.com/Spoje-NET/discomp2abraflexi"], ['evidence' => 'dodavatel', 'autoload' => false]);
         $this->category = new \AbraFlexi\StromCenik();
         $this->atribut = new RW(null, ['evidence' => 'atribut']);
@@ -285,6 +285,14 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
+
+            // Uvolnění objektů a vynucení garbage collectoru kvůli filehandlerům
+            $this->sokoban = null;
+            $this->pricer = null;
+            $this->category = null;
+            $this->atribut = null;
+            $this->atributType = null;
+            gc_collect_cycles();
         }
 
         return $result;
@@ -590,7 +598,7 @@ class Importer extends \Ease\Sand
     /**
      * Create Branch Node.
      *
-     * @param srting $kod focred code for branch
+     * @param string $kod forced code for branch
      *
      * @return string
      */

@@ -122,4 +122,12 @@ class ApiClientTest extends TestCase
         $image = $this->apiClient->getImage('https://httpbin.org/image/png');
         $this->assertNotEmpty($image);
     }
+
+    public function testGetImageMultipleTimes(): void
+    {
+        for ($i = 0; $i < 20; $i++) {
+            $image = $this->apiClient->getImage('https://httpbin.org/image/png');
+            $this->assertNotEmpty($image, "Image download failed on iteration $i");
+        }
+    }
 }

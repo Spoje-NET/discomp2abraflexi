@@ -174,7 +174,7 @@ class ApiClient extends \Ease\Molecule
             $this->addStatusMessage($msg, 'error');
 
             if ($this->throwException) {
-                throw new \Ease\Exception($msg, $this);
+                throw new \Ease\Exception($msg, $this->lastResponseCode);
             }
         }
 
@@ -347,8 +347,26 @@ class ApiClient extends \Ease\Molecule
 
     public function getImage($baseImageUrl)
     {
-        $this->doCurlRequest($baseImageUrl);
-
-        return $this->lastCurlResponse;
+        // Vytvořit nový cURL handle pro každý obrázek
+        $curl = \curl_init();
+        \curl_setopt($curl, \CURLOPT_URL, $baseImageUrl);
+        \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curl, \CURLOPT_FOLLOWLOCATION, true);
+        \curl_setopt($curl, \CURLOPT_SSL_VERIFYPEER, true);
+        \curl_setopt($curl, \CURLOPT_SSL_VERIFYHOST, false);
+        if ($this->timeout) {
+            \curl_setopt($curl, \CURLOPT_HTTPHEADER, [
+                'Connection: Keep-Alive',
+                'Keep-Alive: '.$this->timeout,
+            ]);
+        }
+        $imageData = \curl_exec($curl);
+        $this->curlInfo = \curl_getinfo($curl);
+        $this->curlInfo['when'] = microtime();
+        $this->lastResponseCode = $this->curlInfo['http_code'];
+        $this->lastCurlError = \curl_error($curl);
+        \curl_close($curl);
+        $this->lastCurlResponse = $imageData;
+        return $imageData;
     }
 }
