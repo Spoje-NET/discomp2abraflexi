@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace SpojeNet\Discomp;
 
 use AbraFlexi\Functions;
-use AbraFlexi\RO;
 use AbraFlexi\RW;
 
 /**
@@ -114,7 +113,7 @@ class Importer extends \Ease\Sand
     public function ensureSupplierExists()
     {
         $suplierOk = true;
-        $checker = new \AbraFlexi\Adresar($this->suplier, ['ignore404' => true]);
+        $checker = new \AbraFlexi\Adresar(\AbraFlexi\Functions::code($this->suplier), ['ignore404' => true]);
 
         if ($checker->lastResponseCode === 404) {
             $this->addStatusMessage($this->suplier.' is missing.', 'warning');
@@ -650,7 +649,7 @@ class Importer extends \Ease\Sand
             'popis' => 'Discomp Import',
             'tabulka' => 'cz.winstrom.vo.cen.Cenik',
         ];
-        $root = new RW(Functions::uncode(self::$ROOT), ['evidence' => 'strom-koren', 'ignore404' => true]);
+        $root = new RW(Functions::code(self::$ROOT), ['evidence' => 'strom-koren', 'ignore404' => true]);
 
         return $root->lastResponseCode === 200 ? $root->getMyKey() : $root->insertToAbraFlexi($discpmpData);
     }

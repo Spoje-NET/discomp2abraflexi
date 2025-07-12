@@ -3,7 +3,7 @@
     "name": "discomp2abraflexi",
     "description": "Import Pricelist from Discomp to AbraFlexi",
     "executable": "discomp2abraflexi",
-    "setup": "",
+    "setup": "discomp2abraflexi-init",
     "cmdparams": "",
     "deploy": "apt install discomp2abraflexi",
     "homepage": "https:\/\/github.com\/Spoje-NET\/discomp2abraflexi",
