@@ -205,7 +205,7 @@ class Importer extends \Ease\Sand
                 $this->sokoban->setDataValue('popis', $activeItemData['SHORT_DESCRIPTION']);
             }
 
-            $this->sokoban->setDataValue('mj1', Functions::uncode($activeItemData['UNIT']));
+            $this->sokoban->setDataValue('mj1', Functions::code($activeItemData['UNIT']));
 
             if (\array_key_exists('MANUFACTURER', $activeItemData)) {
                 $this->sokoban->setDataValue('vyrobce', $this->findManufacturerCode($activeItemData['MANUFACTURER']));
