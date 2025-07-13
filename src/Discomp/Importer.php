@@ -84,7 +84,7 @@ class Importer extends \Ease\Sand
     {
         $this->sokoban = new \AbraFlexi\Cenik(null, ['ignore404' => true]);
         $this->sokoban->setObjectName('Pricelist');
-        $this->suplier = Functions::uncode(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
+        $this->suplier = Functions::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
         $this->pricer = new \AbraFlexi\Dodavatel(['firma' => $this->suplier, 'poznam' => 'Import: '.\Ease\Shared::AppName().' '.\Ease\Shared::AppVersion()."\nhttps://github.com/Spoje-NET/discomp2abraflexi"], ['evidence' => 'dodavatel', 'autoload' => false]);
         $this->category = new \AbraFlexi\StromCenik();
         $this->atribut = new RW(null, ['evidence' => 'atribut']);
@@ -171,7 +171,7 @@ class Importer extends \Ease\Sand
 
             $this->sokoban->setDataValue('kod', $activeItemData['PART_NUMBER']);
 
-            $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::uncode($activeItemData['PART_NUMBER'])]);
+            $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::code($activeItemData['PART_NUMBER'])]);
 
             $this->sokoban->setDataValue('dodavatel', $this->suplier);
 
@@ -256,7 +256,7 @@ class Importer extends \Ease\Sand
                 if (\array_key_exists('CATEGORY', $activeItemData['CATEGORIES'])) {
                     if (\is_array($activeItemData['CATEGORIES']['CATEGORY'])) {
                         foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
-                            $this->category->insertToAbraFlexi(['idZaznamu' => Functions::uncode($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
+                            $this->category->insertToAbraFlexi(['idZaznamu' => Functions::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
                         }
                     } else {
                         $this->category->addStatusMessage('Bad Category hierarchy: '.json_encode($activeItemData['CATEGORIES']['CATEGORY']), 'warning');
@@ -606,7 +606,7 @@ class Importer extends \Ease\Sand
      */
     public function createBranchNode(string $node, int $level, string $parent, string $kod)
     {
-        $kod = Functions::uncode(substr($kod, 0, 30));
+        $kod = Functions::code(substr($kod, 0, 30));
 
         if (\array_key_exists($level, $this->levels)) {
             ++$this->levels[$level];
@@ -659,7 +659,7 @@ class Importer extends \Ease\Sand
      */
     public function findManufacturerCode(string $manufacturerName)
     {
-        $manufacturerCode = Functions::uncode($manufacturerName);
+        $manufacturerCode = Functions::code($manufacturerName);
         $manufacturer = new \AbraFlexi\Adresar($manufacturerCode, ['ignore404' => true]);
 
         if ($manufacturer->lastResponseCode === 404) {
