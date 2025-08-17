@@ -9,8 +9,8 @@
     "homepage": "https:\/\/github.com\/Spoje-NET\/discomp2abraflexi",
     "ociimage": "docker.io/vitexsoftware/discomp2abraflexi",
     "uuid": "60e3fd6f-1c7c-4be7-b1ff-801c94b70f39",
-    "topics": "Discomp,Pricelist,Importer",
-    "requirements": "AbraFlexi",
+    "topics": ["Discomp", "Pricelist", "Importer"],
+    "requirements": ["AbraFlexi"],
     "environment": {
         "ABRAFLEXI_COMPANY": {
             "type": "string",
