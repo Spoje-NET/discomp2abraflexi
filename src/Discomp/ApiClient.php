@@ -69,6 +69,11 @@ class ApiClient extends \Ease\Molecule
     private string $apiPassword;
 
     /**
+     * Discomp API Retry count on curl error.
+     */
+    private int $retryCount = 10;
+
+    /**
      * May be huge response.
      *
      * @var bool|string
@@ -91,6 +96,7 @@ class ApiClient extends \Ease\Molecule
         $this->apiUsername = \strlen($username) ? $username : \Ease\Shared::cfg('DISCOMP_USERNAME');
         $this->apiPassword = \strlen($password) ? $password : \Ease\Shared::cfg('DISCOMP_PASSWORD');
         $this->debug = strtolower((string) \Ease\Shared::cfg('DISCOMP_API_DEBUG', false)) === 'True';
+        $this->retryCount = (int) \Ease\Shared::cfg('DISCOMP_RETRY', 10);
         $this->curlInit();
         $this->setObjectName();
     }
@@ -160,19 +166,27 @@ class ApiClient extends \Ease\Molecule
     public function doCurlRequest($url, $method = 'GET', $postParams = [])
     {
         curl_setopt($this->curl, \CURLOPT_URL, $url);
-
         curl_setopt($this->curl, \CURLOPT_CUSTOMREQUEST, strtoupper($method));
 
-        $this->lastCurlResponse = curl_exec($this->curl);
-        $this->curlInfo = curl_getinfo($this->curl);
-        $this->curlInfo['when'] = microtime();
-        $this->lastResponseCode = $this->curlInfo['http_code'];
-        $this->lastCurlError = curl_error($this->curl);
+        for ($try = 1; $try <= $this->retryCount; $try++) {
+            $this->lastCurlResponse = curl_exec($this->curl);
+            $this->curlInfo = curl_getinfo($this->curl);
+            $this->curlInfo['when'] = microtime();
+            $this->lastResponseCode = $this->curlInfo['http_code'];
+            $this->lastCurlError = curl_error($this->curl);
+
+            if (\strlen($this->lastCurlError)) {
+                $msg = sprintf('Curl Error (HTTP %d): %s', $this->lastResponseCode, $this->lastCurlError);
+                $this->addStatusMessage(sprintf(_('Try %d/%d: %s'), $try, $this->retryCount, $msg), 'warning');
+                sleep(60);
+            } else {
+                break; // No error, exit the loop
+            }
+        }
 
         if (\strlen($this->lastCurlError)) {
             $msg = sprintf('Curl Error (HTTP %d): %s', $this->lastResponseCode, $this->lastCurlError);
             $this->addStatusMessage($msg, 'error');
-
             if ($this->throwException) {
                 throw new \Ease\Exception($msg, $this->lastResponseCode);
             }
