@@ -168,7 +168,7 @@ class ApiClient extends \Ease\Molecule
         curl_setopt($this->curl, \CURLOPT_URL, $url);
         curl_setopt($this->curl, \CURLOPT_CUSTOMREQUEST, strtoupper($method));
 
-        for ($try = 1; $try <= $this->retryCount; $try++) {
+        for ($try = 1; $try <= $this->retryCount; ++$try) {
             $this->lastCurlResponse = curl_exec($this->curl);
             $this->curlInfo = curl_getinfo($this->curl);
             $this->curlInfo['when'] = microtime();
@@ -187,6 +187,7 @@ class ApiClient extends \Ease\Molecule
         if (\strlen($this->lastCurlError)) {
             $msg = sprintf('Curl Error (HTTP %d): %s', $this->lastResponseCode, $this->lastCurlError);
             $this->addStatusMessage($msg, 'error');
+
             if ($this->throwException) {
                 throw new \Ease\Exception($msg, $this->lastResponseCode);
             }
@@ -273,8 +274,8 @@ class ApiClient extends \Ease\Molecule
     {
         $this->doCurlRequest($this->baseEndpoint.'/GetResult?resultType='.$resultType);
 
-        if ($this->lastCurlResponse[0] !== '<') {
-            throw new \Exception($this->lastCurlResponse);
+        if (empty($this->lastCurlResponse) || $this->lastCurlResponse[0] !== '<') {
+            throw new \Exception($this->lastCurlResponse ?: 'Empty response');
         }
 
         return current(self::xml2array(new \SimpleXMLElement(html_entity_decode($this->lastCurlResponse))));
@@ -291,11 +292,11 @@ class ApiClient extends \Ease\Molecule
                 '&to='.$to->format('Y-m-d\T00:00:00'));
 
         if ($exitCode !== 200) {
-            throw new \Exception($this->curlInfo['url']."\n".html_entity_decode($this->lastCurlResponse), $exitCode);
+            throw new \Exception($this->curlInfo['url']."\n".($this->lastCurlResponse ? html_entity_decode($this->lastCurlResponse) : 'Empty response'), $exitCode);
         }
 
-        if ($this->lastCurlResponse[0] !== '<') {
-            throw new \Exception($this->curlInfo['url']."\n".html_entity_decode($this->lastCurlResponse));
+        if (empty($this->lastCurlResponse) || $this->lastCurlResponse[0] !== '<') {
+            throw new \Exception($this->curlInfo['url']."\n".($this->lastCurlResponse ? html_entity_decode($this->lastCurlResponse) : 'Empty response'));
         }
 
         return current(self::xml2array(new \SimpleXMLElement($this->lastCurlResponse)));
@@ -313,8 +314,8 @@ class ApiClient extends \Ease\Molecule
     {
         $this->doCurlRequest($this->baseEndpoint.'/GetResultByCode?resultType='.$stoItemBase.'&code='.$code);
 
-        if ($this->lastCurlResponse[0] !== '<') {
-            throw new \Exception(html_entity_decode($this->lastCurlResponse));
+        if (empty($this->lastCurlResponse) || $this->lastCurlResponse[0] !== '<') {
+            throw new \Exception($this->lastCurlResponse ? html_entity_decode($this->lastCurlResponse) : 'Empty response');
         }
 
         /*
