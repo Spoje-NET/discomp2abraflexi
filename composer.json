@@ -3,14 +3,14 @@
     "description": "Import Pricelist from Discomp to AbraFlexi",
     "type": "package",
     "require": {
-        "spojenet/flexibee": "^3.3"
+        "spojenet/flexibee": "^2025.7"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
         "phpstan/phpstan": "*",
-        "friendsofphp/php-cs-fixer": "^3.61",
-        "ergebnis/composer-normalize": "^2.43",
-        "ergebnis/php-cs-fixer-config": "^6.34"
+        "friendsofphp/php-cs-fixer": "^3.87",
+        "ergebnis/composer-normalize": "^2.48",
+        "ergebnis/php-cs-fixer-config": "^6.54"
     },
     "license": "MIT",
     "autoload": {

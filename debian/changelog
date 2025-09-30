@@ -1,8 +1,14 @@
-discomp2abraflexi (0.3.3) UNRELEASED; urgency=medium
+discomp2abraflexi (0.3.4) UNRELEASED; urgency=medium
+
+  * ensureSupplierExists fix
+
+ -- vitex <info@vitexsoftware.cz>  Sat, 12 Jul 2025 23:43:21 +0200
+
+discomp2abraflexi (0.3.3) unstable; urgency=medium
 
   * Json Report added
 
- -- vitex <info@vitexsoftware.cz>  Tue, 11 Feb 2025 00:21:50 +0100
+ -- vitex <info@vitexsoftware.cz>  Sat, 12 Jul 2025 23:40:00 +0200
 
 discomp2abraflexi (0.3.2) unstable; urgency=medium
 

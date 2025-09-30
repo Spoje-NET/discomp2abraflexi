@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace SpojeNet\Discomp;
 
-use AbraFlexi\RO;
+use AbraFlexi\Functions;
 use AbraFlexi\RW;
 
 /**
@@ -84,7 +84,7 @@ class Importer extends \Ease\Sand
     {
         $this->sokoban = new \AbraFlexi\Cenik(null, ['ignore404' => true]);
         $this->sokoban->setObjectName('Pricelist');
-        $this->suplier = \AbraFlexi\RO::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
+        $this->suplier = Functions::code(\Ease\Shared::cfg('ABRAFLEXI_DISCOMP_CODE', 'DISCOMP'));
         $this->pricer = new \AbraFlexi\Dodavatel(['firma' => $this->suplier, 'poznam' => 'Import: '.\Ease\Shared::AppName().' '.\Ease\Shared::AppVersion()."\nhttps://github.com/Spoje-NET/discomp2abraflexi"], ['evidence' => 'dodavatel', 'autoload' => false]);
         $this->category = new \AbraFlexi\StromCenik();
         $this->atribut = new RW(null, ['evidence' => 'atribut']);
@@ -113,12 +113,12 @@ class Importer extends \Ease\Sand
     public function ensureSupplierExists()
     {
         $suplierOk = true;
-        $checker = new \AbraFlexi\Adresar($this->suplier, ['ignore404' => true]);
+        $checker = new \AbraFlexi\Adresar(\AbraFlexi\Functions::code($this->suplier), ['ignore404' => true]);
 
         if ($checker->lastResponseCode === 404) {
             $this->addStatusMessage($this->suplier.' is missing.', 'warning');
             $checker->insertToAbraFlexi([
-                'kod' => \AbraFlexi\Functions::uncode($this->suplier),
+                'kod' => Functions::uncode($this->suplier),
                 'nazev' => 'Discomp s.r.o.',
                 'typVztahuK' => 'typVztahu.dodavatel',
                 'platceDph' => true,
@@ -163,7 +163,7 @@ class Importer extends \Ease\Sand
             $discompItemCode = $activeItemData['CODE'];
             $this->sokoban->setObjectName('('.$pos.'/'.\count($freshItems).') StoreItem:'.$discompItemCode);
 
-            if (!array_key_exists('PART_NUMBER', $activeItemData) || \is_array($activeItemData['PART_NUMBER'])) {
+            if (!\array_key_exists('PART_NUMBER', $activeItemData) || \is_array($activeItemData['PART_NUMBER'])) {
                 $this->sokoban->addStatusMessage('NO PART_NUMBER !? '.json_encode($activeItemData), 'debug');
 
                 continue;
@@ -171,7 +171,7 @@ class Importer extends \Ease\Sand
 
             $this->sokoban->setDataValue('kod', $activeItemData['PART_NUMBER']);
 
-            $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER'])]);
+            $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::code($activeItemData['PART_NUMBER'])]);
 
             $this->sokoban->setDataValue('dodavatel', $this->suplier);
 
@@ -205,7 +205,7 @@ class Importer extends \Ease\Sand
                 $this->sokoban->setDataValue('popis', $activeItemData['SHORT_DESCRIPTION']);
             }
 
-            $this->sokoban->setDataValue('mj1', \AbraFlexi\RO::code($activeItemData['UNIT']));
+            $this->sokoban->setDataValue('mj1', Functions::code($activeItemData['UNIT']));
 
             if (\array_key_exists('MANUFACTURER', $activeItemData)) {
                 $this->sokoban->setDataValue('vyrobce', $this->findManufacturerCode($activeItemData['MANUFACTURER']));
@@ -220,12 +220,12 @@ class Importer extends \Ease\Sand
                     if (\is_array($activeItemData['IMAGES']['IMAGE'])) {
                         foreach ($activeItemData['IMAGES']['IMAGE'] as $imgPos => $imgUrl) {
                             $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'_'.$imgPos.'.jpg', $this->discomper->getImage($imgUrl), $this->discomper->getResponseMime());
-                            $this->sokoban->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban->getRecordCode()).' Img: '.$imgUrl, $stdImg->lastResponseCode === 201 ? 'success' : 'error');
+                            $this->sokoban->addStatusMessage(Functions::uncode($this->sokoban->getRecordCode()).' Img: '.$imgUrl, $stdImg->lastResponseCode === 201 ? 'success' : 'error');
                             ++$this->images;
                         }
                     } else {
                         $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'_'. 0 .'.jpg', $this->discomper->getImage($activeItemData['IMAGES']['IMAGE']), $this->discomper->getResponseMime());
-                        $this->sokoban->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban->getRecordCode()).' Img: '.$activeItemData['IMAGES']['IMAGE'], $stdImg->lastResponseCode === 201 ? 'success' : 'error');
+                        $this->sokoban->addStatusMessage(Functions::uncode($this->sokoban->getRecordCode()).' Img: '.$activeItemData['IMAGES']['IMAGE'], $stdImg->lastResponseCode === 201 ? 'success' : 'error');
                         ++$this->images;
                     }
 
@@ -256,7 +256,7 @@ class Importer extends \Ease\Sand
                 if (\array_key_exists('CATEGORY', $activeItemData['CATEGORIES'])) {
                     if (\is_array($activeItemData['CATEGORIES']['CATEGORY'])) {
                         foreach ($this->prepareCategories($activeItemData['CATEGORIES']['CATEGORY']) as $category) {
-                            $this->category->insertToAbraFlexi(['idZaznamu' => \AbraFlexi\RO::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
+                            $this->category->insertToAbraFlexi(['idZaznamu' => Functions::code($activeItemData['PART_NUMBER']), 'uzel' => $this->treeCache[$category]]);
                         }
                     } else {
                         $this->category->addStatusMessage('Bad Category hierarchy: '.json_encode($activeItemData['CATEGORIES']['CATEGORY']), 'warning');
@@ -285,6 +285,14 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
+
+            // Uvolnění objektů a vynucení garbage collectoru kvůli filehandlerům
+            $this->sokoban = null;
+            $this->pricer = null;
+            $this->category = null;
+            $this->atribut = null;
+            $this->atributType = null;
+            gc_collect_cycles();
         }
 
         return $result;
@@ -296,10 +304,10 @@ class Importer extends \Ease\Sand
      */
     public function syncProperty($name, $value): void
     {
-        $attributeCode = \AbraFlexi\RO::code(mb_substr($name, -20));
+        $attributeCode = Functions::code(mb_substr($name, -20));
 
         if (empty($this->atributType->loadFromAbraFlexi($attributeCode))) {
-            $this->atributType->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban->getRecordCode()).': Attribute '.$name.' created', $this->atributType->sync(['kod' => \AbraFlexi\Functions::uncode($attributeCode), 'nazev' => $name, 'typAtributK' => 'typAtribut.retezec']) ? 'success' : 'error');
+            $this->atributType->addStatusMessage(Functions::uncode($this->sokoban->getRecordCode()).': Attribute '.$name.' created', $this->atributType->sync(['kod' => \AbraFlexi\Functions::uncode($attributeCode), 'nazev' => $name, 'typAtributK' => 'typAtribut.retezec']) ? 'success' : 'error');
         }
 
         $this->atribut->dataReset();
@@ -317,9 +325,9 @@ class Importer extends \Ease\Sand
         $this->atribut->setDataValue('typAtributu', $this->atributType);
 
         try {
-            $this->atribut->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban->getRecordCode()).': '.$name.': '.$value, $this->atribut->sync() ? 'success' : 'warning');
+            $this->atribut->addStatusMessage(Functions::uncode($this->sokoban->getRecordCode()).': '.$name.': '.$value, $this->atribut->sync() ? 'success' : 'warning');
         } catch (\AbraFlexi\Exception $exc) {
-            $this->atribut->addStatusMessage(\AbraFlexi\Functions::uncode($this->sokoban->getRecordCode()).': '.$name.': '.$value, 'error');
+            $this->atribut->addStatusMessage(Functions::uncode($this->sokoban->getRecordCode()).': '.$name.': '.$value, 'error');
         } // BAD:  {"winstrom":{"@version":"1.0","atribut":{"hodnota":"QCA9531","valString":"QCA9531","cenik":"code:CRS354-48P-4S+2Q+RM","typAtributu":"code:CPU"},"@atomic":false}}
     }
 
@@ -349,14 +357,14 @@ class Importer extends \Ease\Sand
                     $largeImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseEnlargement'].$discompItemId;
 
                     if (\array_key_exists('PartNo', $stoItem)) {
-                        $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\RO::code($stoItem['PartNo'])]);
+                        $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::uncode($stoItem['PartNo'])]);
                         $this->sokoban->dataReset();
                         $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material')); // TODO: ???
                         $this->sokoban->setDataValue('typZasobyK', 'typZasoby.material'); // TODO: ???
                         $this->sokoban->setDataValue('skladove', true); // TODO: ???
                         $this->sokoban->setDataValue('kod', $stoItem['PartNo']);
                         $this->pricer->unsetDataValue('id');
-                        $this->pricer->setDataValue('cenik', \AbraFlexi\RO::code($stoItem['PartNo']));
+                        $this->pricer->setDataValue('cenik', Functions::code($stoItem['PartNo']));
                         $this->pricer->setDataValue('nakupCena', $stoItem['PriceOrd']);
 
                         if (\array_key_exists('QtyFree', $stoItem)) {
@@ -451,8 +459,8 @@ class Importer extends \Ease\Sand
         }
 
         $this->pricer->setDataValue('nakupCena', $activeItemData['PURCHASE_PRICE']); // TODO: Confirm column
-        $this->pricer->setDataValue('mena', RO::code($activeItemData['CURRENCY']));
-        $this->pricer->setDataValue('cenik', RO::code($activeItemData['PART_NUMBER']));
+        $this->pricer->setDataValue('mena', Functions::code($activeItemData['CURRENCY']));
+        $this->pricer->setDataValue('cenik', Functions::code($activeItemData['PART_NUMBER']));
 
         if (\array_key_exists('STOCK', $activeItemData) && \array_key_exists('AMOUNT', $activeItemData['STOCK']) && (float) $activeItemData['STOCK']['AMOUNT']) {
             $this->pricer->setDataValue('stavMJ', $activeItemData['STOCK']['AMOUNT']);
@@ -462,7 +470,7 @@ class Importer extends \Ease\Sand
 
         try {
             $this->pricer->insertToAbraFlexi();
-            $this->pricer->addStatusMessage('supplier price update: '.\AbraFlexi\Functions::uncode($this->sokoban->getRecordCode()).': '.$this->pricer->getDataValue('nakupCena').' '.\AbraFlexi\Functions::uncode($this->pricer->getDataValue('mena')), $this->pricer->lastResponseCode === 201 ? 'success' : 'error');
+            $this->pricer->addStatusMessage('supplier price update: '.Functions::uncode($this->sokoban->getRecordCode()).': '.$this->pricer->getDataValue('nakupCena').' '.\AbraFlexi\Functions::uncode($this->pricer->getDataValue('mena')), $this->pricer->lastResponseCode === 201 ? 'success' : 'error');
         } catch (\AbraFlexi\Exception $exc) {
             echo $exc->getTraceAsString();
             ++$this->errors;
@@ -574,6 +582,8 @@ class Importer extends \Ease\Sand
     /**
      * Create ale nodes in category tree.
      *
+     * @param string[] $nodes
+     *
      * @return string
      */
     public function categoryBranch(array $nodes)
@@ -590,13 +600,13 @@ class Importer extends \Ease\Sand
     /**
      * Create Branch Node.
      *
-     * @param srting $kod focred code for branch
+     * @param string $kod forced code for branch
      *
      * @return string
      */
     public function createBranchNode(string $node, int $level, string $parent, string $kod)
     {
-        $kod = RO::code(substr($kod, 0, 30));
+        $kod = Functions::code(substr($kod, 0, 30));
 
         if (\array_key_exists($level, $this->levels)) {
             ++$this->levels[$level];
@@ -609,7 +619,7 @@ class Importer extends \Ease\Sand
         if ($strom->lastResponseCode === 404) {
             $strom->setDataValue('id', $kod);
             $strom->setDataValue('nazev', $node);
-            $strom->setDataValue('strom', RO::code(self::$ROOT));
+            $strom->setDataValue('strom', Functions::code(self::$ROOT));
 
             if ($parent) {
                 $strom->setDataValue('otec', $parent);
@@ -639,7 +649,7 @@ class Importer extends \Ease\Sand
             'popis' => 'Discomp Import',
             'tabulka' => 'cz.winstrom.vo.cen.Cenik',
         ];
-        $root = new RW(RO::code(self::$ROOT), ['evidence' => 'strom-koren', 'ignore404' => true]);
+        $root = new RW(Functions::code(self::$ROOT), ['evidence' => 'strom-koren', 'ignore404' => true]);
 
         return $root->lastResponseCode === 200 ? $root->getMyKey() : $root->insertToAbraFlexi($discpmpData);
     }
@@ -649,7 +659,7 @@ class Importer extends \Ease\Sand
      */
     public function findManufacturerCode(string $manufacturerName)
     {
-        $manufacturerCode = RO::code($manufacturerName);
+        $manufacturerCode = Functions::code($manufacturerName);
         $manufacturer = new \AbraFlexi\Adresar($manufacturerCode, ['ignore404' => true]);
 
         if ($manufacturer->lastResponseCode === 404) {
@@ -661,10 +671,8 @@ class Importer extends \Ease\Sand
 
     /**
      * Remove Item from Pricelit Category Tree.
-     *
-     * @param \AbraFlexi\Cenik $item
      */
-    public function removeItemFromTree($item)
+    public function removeItemFromTree(\AbraFlexi\Cenik $item): int
     {
         $done = 0;
         $current = $this->category->getColumnsFromAbraFlexi(['id'], ['idZaznamu' => $item->getRecordID()]);
