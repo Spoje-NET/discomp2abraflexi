@@ -67,7 +67,7 @@
             "required": false
         },
         "DISCOMP_API_DEBUG": {
-            "type": "checkbox",
+            "type": "bool",
             "description": "Show API debug messages",
             "defval": "False",
             "required": false
@@ -107,7 +107,7 @@
             "required": false
         },
         "APP_DEBUG": {
-            "type": "checkbox",
+            "type": "bool",
             "description": "Show debug messages",
             "defval": "False",
             "required": false
