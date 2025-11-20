@@ -102,3 +102,9 @@ Stack trace:
 #3 {main}
   thrown in /usr/src/discomp2abraflexi/src/Discomp/ApiClient.php on line 273
 ```
+
+## Exit Codes
+
+This application uses the following exit codes:
+
+- `0`: Success
