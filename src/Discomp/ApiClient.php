@@ -278,7 +278,8 @@ class ApiClient extends \Ease\Molecule
             throw new \Exception($this->lastCurlResponse ?: 'Empty response');
         }
 
-        return current(self::xml2array(new \SimpleXMLElement(html_entity_decode($this->lastCurlResponse))));
+        $xmlString = $this->lastCurlResponse !== false ? $this->lastCurlResponse : '';
+        return current(self::xml2array(new \SimpleXMLElement(html_entity_decode($xmlString, ENT_QUOTES | ENT_HTML5, 'UTF-8'))));
     }
 
     /**

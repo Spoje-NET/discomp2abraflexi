@@ -1,4 +1,4 @@
-# Copilot Instructions
+<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
 All code comments should be written in English.
 
@@ -8,7 +8,10 @@ All code should be written in PHP 8.4 or later.
 
 All code should follow the PSR-12 coding standard.
 
+
 When writing code, always include a docblock for functions and classes, describing their purpose, parameters, and return types.
+
+When writing or updating commands, always ensure that all output (including errors, status, and results) is returned in JSON format when the --format json option is requested, for all commands and operations.
 
 When writing tests, use PHPUnit and follow the PSR-12 coding standard.
 
@@ -41,10 +44,12 @@ When writing code, always ensure that it is maintainable and follows best practi
 When create new class or update existing class, always create or update its phpunit test files.
 
 When developing or testing this application, always run the main script from the src/ directory:
+
 ```bash
 cd src/
 php discomp2abraflexi.php
 ```
+
 This ensures the relative paths (../vendor/autoload.php and ../.env) work correctly during development.
 
 The application uses relative paths intentionally - they are resolved during Debian packaging via sed commands in debian/rules file for production deployment.
