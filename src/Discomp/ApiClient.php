@@ -274,15 +274,18 @@ class ApiClient extends \Ease\Molecule
     {
         $this->doCurlRequest($this->baseEndpoint.'/GetResult?resultType='.$resultType);
 
-        if (empty($this->lastCurlResponse) || $this->lastCurlResponse === false || !is_string($this->lastCurlResponse) || $this->lastCurlResponse[0] !== '<') {
-            throw new \Exception($this->lastCurlResponse !== false && $this->lastCurlResponse !== null ? (string)$this->lastCurlResponse : 'Empty or invalid response');
+        if (empty($this->lastCurlResponse) || $this->lastCurlResponse === false || !\is_string($this->lastCurlResponse) || $this->lastCurlResponse[0] !== '<') {
+            throw new \Exception($this->lastCurlResponse !== false && $this->lastCurlResponse !== null ? (string) $this->lastCurlResponse : 'Empty or invalid response');
         }
 
         $xmlString = $this->lastCurlResponse;
-        if (!is_string($xmlString) || $xmlString === '' || $xmlString === false) {
+
+        if (!\is_string($xmlString) || $xmlString === '' || $xmlString === false) {
             throw new \Exception('Invalid XML response string');
         }
-        $decodedXml = html_entity_decode($xmlString, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        $decodedXml = html_entity_decode($xmlString, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
         return current(self::xml2array(new \SimpleXMLElement($decodedXml)));
     }
 

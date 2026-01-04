@@ -24,7 +24,7 @@
       "type": "string",
       "description": {
         "en": "AbraFlexi comapny code",
-        "cs": "AbraFlexi comapny code"
+        "cs": "AbraFlexi kód firmy"
       },
       "defval": "demo_de",
       "required": true,
@@ -34,7 +34,7 @@
       "type": "string",
       "description": {
         "en": "AbraFlexi Login",
-        "cs": "AbraFlexi Login"
+        "cs": "AbraFlexi přihlášení"
       },
       "defval": "winstrom",
       "required": true,
@@ -44,7 +44,7 @@
       "type": "password",
       "description": {
         "en": "AbraFlexi password",
-        "cs": "AbraFlexi password"
+        "cs": "AbraFlexi heslo"
       },
       "defval": "winstrom",
       "required": true,
@@ -74,7 +74,7 @@
       "type": "string",
       "description": {
         "en": "Discomp Addressbook Code",
-        "cs": "Discomp Addressbook Code"
+        "cs": "Discomp Adresářový kód"
       },
       "defval": "DISCOMP",
       "required": false,
@@ -84,7 +84,7 @@
       "type": "string",
       "description": {
         "en": "Your Discomp username",
-        "cs": "Your Discomp username"
+        "cs": "Váš Discomp uživatelské jméno"
       },
       "defval": "",
       "required": true,
@@ -94,7 +94,7 @@
       "type": "password",
       "description": {
         "en": "Your Discomp password",
-        "cs": "Your Discomp password"
+        "cs": "Vaše Discomp heslo"
       },
       "defval": "",
       "required": true,
@@ -103,8 +103,8 @@
     "DISCOMP_TYP_ZASOBY": {
       "type": "string",
       "description": {
-        "en": "Intial storage Code",
-        "cs": "Intial storage Code"
+        "en": "Intial gods type Code",
+        "cs": "Výchozí kód typu zásoby"
       },
       "defval": "typZasoby.material",
       "required": false,
@@ -114,7 +114,7 @@
       "type": "bool",
       "description": {
         "en": "Show API debug messages",
-        "cs": "Show API debug messages"
+        "cs": "Zobrazit ladicí zprávy API"
       },
       "defval": false,
       "required": false,
@@ -124,7 +124,7 @@
       "type": "string",
       "description": {
         "en": "Import Scope",
-        "cs": "Import Scope"
+        "cs": "Rozsah importu"
       },
       "defval": "yesterday",
       "required": false,
@@ -156,7 +156,7 @@
       "type": "string",
       "description": {
         "en": "write output json data to",
-        "cs": "write output json data to"
+        "cs": "zapsat výstupní json data do"
       },
       "defval": "discomp_pricelist_for_{DISCOMP_USERNAME}.json",
       "required": false,
@@ -166,7 +166,7 @@
       "type": "bool",
       "description": {
         "en": "Show debug messages",
-        "cs": "Show debug messages"
+        "cs": "Zobrazit ladicí zprávy"
       },
       "defval": false,
       "required": false,
@@ -176,7 +176,7 @@
       "type": "string",
       "description": {
         "en": "Logger type",
-        "cs": "Logger type"
+        "cs": "Typ loggeru"
       },
       "defval": "syslog|console",
       "required": false,

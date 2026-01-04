@@ -3,7 +3,7 @@
     "description": "Import Pricelist from Discomp to AbraFlexi",
     "type": "package",
     "require": {
-        "spojenet/flexibee": "^2025.7"
+        "spojenet/flexibee": "^3.6"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
