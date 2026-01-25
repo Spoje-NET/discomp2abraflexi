@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>io.github.spoje_net.discomp2abraflexi</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>discomp2abraflexi</name>
+  <summary>Import Discomp pricelist into AbraFlexi</summary>
+  <description>
+    <p>
+      Enlist the pricelist items and supplier prices. Application Definition for MultiFlexi
+    </p>
+  </description>
+  <categories>
+    <category>System</category>
+    <category>ConsoleOnly</category>
+  </categories>
+  <url type="homepage">https://github.com/Spoje-NET/discomp2abraflexi</url>
+  <url type="bugtracker">https://github.com/Spoje-NET/discomp2abraflexi/issues</url>
+  <developer id="io.github.spoje_net">
+    <name>Spoje.Net</name>
+  </developer>
+  <provides>
+    <binary>discomp2abraflexi</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+</component>
