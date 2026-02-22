@@ -1,0 +1,54 @@
+{
+  "uuid": "aae4c666-eec7-4a48-bc47-0f62b96ea473",
+  "id": "discomp",
+  "code": "DISCOMP",
+  "name": {
+    "en": "Discomp Credentials",
+    "cs": "Přihlašovací údaje Discomp"
+  },
+  "description": {
+    "en": "Credentials required to access Discomp API.",
+    "cs": "Přihlašovací údaje potřebné pro přístup k Discomp API."
+  },
+  "fields": [
+    {
+      "keyword": "DISCOMP_USERNAME",
+      "name": {
+        "en": "Username",
+        "cs": "Uživatelské jméno"
+      },
+      "type": "string",
+      "description": {
+        "en": "Your Discomp account username.",
+        "cs": "Uživatelské jméno účtu Discomp."
+      },
+      "required": true
+    },
+    {
+      "keyword": "DISCOMP_PASSWORD",
+      "name": {
+        "en": "Password",
+        "cs": "Heslo"
+      },
+      "type": "password",
+      "description": {
+        "en": "Your Discomp account password.",
+        "cs": "Heslo k účtu Discomp."
+      },
+      "required": true
+    },
+    {
+      "keyword": "DISCOMP_API_URL",
+      "name": {
+        "en": "API URL",
+        "cs": "API URL adresa"
+      },
+      "type": "string",
+      "description": {
+        "en": "Base URL for the Discomp API.",
+        "cs": "Základní URL adresa pro Discomp API."
+      },
+      "required": true
+    }
+  ]
+}

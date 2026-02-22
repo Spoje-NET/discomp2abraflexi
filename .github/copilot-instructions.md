@@ -15,7 +15,7 @@ When writing or updating commands, always ensure that all output (including erro
 
 When writing tests, use PHPUnit and follow the PSR-12 coding standard.
 
-When writing README, use markdown format.
+When writing documentation, use MarkDown format.
 
 When writing commit messages, use the imperative mood and keep them concise.
 
@@ -54,7 +54,9 @@ This ensures the relative paths (../vendor/autoload.php and ../.env) work correc
 
 The application uses relative paths intentionally - they are resolved during Debian packaging via sed commands in debian/rules file for production deployment.
 
-All files in the multiflexi/*.app.json directory must conform to the schema available at: https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json
+All files *.app.json in the multiflexi/ directory must conform to the schema available at: https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json
+
+All files *.credential-type.json in the multiflexi directory must conform to the schema available at: https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.credential-type.schema.json
 
 All produced reports must conform to the schema available at: https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.report.schema.json
 
