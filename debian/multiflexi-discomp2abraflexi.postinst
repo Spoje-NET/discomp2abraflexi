@@ -12,5 +12,5 @@ done
 
 for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.credtype.json`
 do
-	multiflexi-cli credtype import-json --file $file
+	multiflexi-cli crprototype import-json --file $file
 done
