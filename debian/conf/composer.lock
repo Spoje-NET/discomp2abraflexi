@@ -1,0 +1,334 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "788f01eff0cb830f3f4135bf24e32551",
+    "packages": [
+        {
+            "name": "deb/abraflexi",
+            "version": "3.6.5.383",
+            "dist": {
+                "type": "path",
+                "url": "/usr/share/php/AbraFlexi",
+                "reference": "8403823b6b0b048ed9429c5d8ee32811364bea51"
+            },
+            "require": {
+                "deb/ease-core": "*",
+                "ext-curl": "*",
+                "ext-json": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AbraFlexi\\": "."
+                }
+            },
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Vítězslav Dvořák",
+                    "email": "vitex@arachne.cz"
+                }
+            ],
+            "description": "Library for easy interaction with czech accounting system AbraFlexi.",
+            "homepage": "https://github.com/Spoje-NET/php-abraflexi",
+            "transport-options": {
+                "relative": false
+            }
+        },
+        {
+            "name": "deb/ease-core",
+            "version": "1.49.1.319",
+            "dist": {
+                "type": "path",
+                "url": "/usr/share/php/EaseCore",
+                "reference": "bada6ade733b0010eea1627daefc5ecc64a236f0"
+            },
+            "require": {
+                "composer-runtime-api": "*",
+                "php": ">=7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ease\\": ".",
+                    "Ease\\Logger\\": "Logger"
+                }
+            },
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Vítězslav Dvořák",
+                    "email": "info@vitexsoftware.cz",
+                    "homepage": "http://v.s.cz/"
+                }
+            ],
+            "description": "An Core of PHP Framework for Ease of writing Applications (debianized)",
+            "homepage": "http://v.s.cz/ease.php",
+            "transport-options": {
+                "relative": false
+            }
+        },
+        {
+            "name": "thecodingmachine/safe",
+            "version": "v2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thecodingmachine/safe.git",
+                "reference": "3115ecd6b4391662b4931daac4eba6b07a2ac1f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/3115ecd6b4391662b4931daac4eba6b07a2ac1f0",
+                "reference": "3115ecd6b4391662b4931daac4eba6b07a2ac1f0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.2",
+                "thecodingmachine/phpstan-strict-rules": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "deprecated/apc.php",
+                    "deprecated/array.php",
+                    "deprecated/datetime.php",
+                    "deprecated/libevent.php",
+                    "deprecated/misc.php",
+                    "deprecated/password.php",
+                    "deprecated/mssql.php",
+                    "deprecated/stats.php",
+                    "deprecated/strings.php",
+                    "lib/special_cases.php",
+                    "deprecated/mysqli.php",
+                    "generated/apache.php",
+                    "generated/apcu.php",
+                    "generated/array.php",
+                    "generated/bzip2.php",
+                    "generated/calendar.php",
+                    "generated/classobj.php",
+                    "generated/com.php",
+                    "generated/cubrid.php",
+                    "generated/curl.php",
+                    "generated/datetime.php",
+                    "generated/dir.php",
+                    "generated/eio.php",
+                    "generated/errorfunc.php",
+                    "generated/exec.php",
+                    "generated/fileinfo.php",
+                    "generated/filesystem.php",
+                    "generated/filter.php",
+                    "generated/fpm.php",
+                    "generated/ftp.php",
+                    "generated/funchand.php",
+                    "generated/gettext.php",
+                    "generated/gmp.php",
+                    "generated/gnupg.php",
+                    "generated/hash.php",
+                    "generated/ibase.php",
+                    "generated/ibmDb2.php",
+                    "generated/iconv.php",
+                    "generated/image.php",
+                    "generated/imap.php",
+                    "generated/info.php",
+                    "generated/inotify.php",
+                    "generated/json.php",
+                    "generated/ldap.php",
+                    "generated/libxml.php",
+                    "generated/lzf.php",
+                    "generated/mailparse.php",
+                    "generated/mbstring.php",
+                    "generated/misc.php",
+                    "generated/mysql.php",
+                    "generated/network.php",
+                    "generated/oci8.php",
+                    "generated/opcache.php",
+                    "generated/openssl.php",
+                    "generated/outcontrol.php",
+                    "generated/pcntl.php",
+                    "generated/pcre.php",
+                    "generated/pgsql.php",
+                    "generated/posix.php",
+                    "generated/ps.php",
+                    "generated/pspell.php",
+                    "generated/readline.php",
+                    "generated/rpminfo.php",
+                    "generated/rrd.php",
+                    "generated/sem.php",
+                    "generated/session.php",
+                    "generated/shmop.php",
+                    "generated/sockets.php",
+                    "generated/sodium.php",
+                    "generated/solr.php",
+                    "generated/spl.php",
+                    "generated/sqlsrv.php",
+                    "generated/ssdeep.php",
+                    "generated/ssh2.php",
+                    "generated/stream.php",
+                    "generated/strings.php",
+                    "generated/swoole.php",
+                    "generated/uodbc.php",
+                    "generated/uopz.php",
+                    "generated/url.php",
+                    "generated/var.php",
+                    "generated/xdiff.php",
+                    "generated/xml.php",
+                    "generated/xmlrpc.php",
+                    "generated/yaml.php",
+                    "generated/yaz.php",
+                    "generated/zip.php",
+                    "generated/zlib.php"
+                ],
+                "classmap": [
+                    "lib/DateTime.php",
+                    "lib/DateTimeImmutable.php",
+                    "lib/Exceptions/",
+                    "deprecated/Exceptions/",
+                    "generated/Exceptions/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
+            "support": {
+                "issues": "https://github.com/thecodingmachine/safe/issues",
+                "source": "https://github.com/thecodingmachine/safe/tree/v2.5.0"
+            },
+            "time": "2023-04-05T11:54:14+00:00"
+        },
+        {
+            "name": "tivie/php-os-detector",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tivie/php-os-detector.git",
+                "reference": "9461dcd85c00e03842264f2fc8ccdc8d46867321"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tivie/php-os-detector/zipball/9461dcd85c00e03842264f2fc8ccdc8d46867321",
+                "reference": "9461dcd85c00e03842264f2fc8ccdc8d46867321",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tivie\\OS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "APACHE 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Estevão Soares dos Santos",
+                    "email": "estevao@soares-dos-santos.com"
+                }
+            ],
+            "description": "A small utility library that detects the OS the server is running on",
+            "homepage": "http://tivie.github.com/php-os-detector/",
+            "keywords": [
+                "detection",
+                "detector",
+                "identification",
+                "operating system",
+                "os",
+                "os detection"
+            ],
+            "support": {
+                "issues": "https://github.com/tivie/php-os-detector/issues",
+                "source": "https://github.com/tivie/php-os-detector/tree/master"
+            },
+            "time": "2017-10-21T03:33:59+00:00"
+        },
+        {
+            "name": "wyrihaximus/file-descriptors",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WyriHaximus/php-file-descriptors.git",
+                "reference": "de9c3dceecfab88c3f73aa6c9ea5372e7f635d7a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WyriHaximus/php-file-descriptors/zipball/de9c3dceecfab88c3f73aa6c9ea5372e7f635d7a",
+                "reference": "de9c3dceecfab88c3f73aa6c9ea5372e7f635d7a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8 || ^7.4",
+                "thecodingmachine/safe": "^2 || ^1",
+                "tivie/php-os-detector": "^1.1"
+            },
+            "require-dev": {
+                "wyrihaximus/iterator-or-array-to-array": "^1.1",
+                "wyrihaximus/test-utilities": "^3.3.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WyriHaximus\\FileDescriptors\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cees-Jan Kiewiet",
+                    "email": "ceesjank@gmail.com"
+                }
+            ],
+            "description": "List open file descriptors for the current process cross platform",
+            "support": {
+                "issues": "https://github.com/WyriHaximus/php-file-descriptors/issues",
+                "source": "https://github.com/WyriHaximus/php-file-descriptors/tree/1.1.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/WyriHaximus",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-01-22T13:34:53+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "wyrihaximus/file-descriptors": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
+}

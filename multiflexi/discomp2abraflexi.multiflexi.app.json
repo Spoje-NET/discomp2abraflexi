@@ -1,196 +1,197 @@
 {
-    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.1.0",
-    "uuid": "60e3fd6f-1c7c-4be7-b1ff-801c94b70f39",
-    "name": {
-        "en": "discomp2abraflexi",
-        "cs": "discomp2abraflexi"
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+  "schemaVersion": "3.2.1",
+  "uuid": "60e3fd6f-1c7c-4be7-b1ff-801c94b70f39",
+  "name": {
+    "en": "discomp2abraflexi",
+    "cs": "discomp2abraflexi"
+  },
+  "description": {
+    "en": "Import Pricelist from Discomp to AbraFlexi",
+    "cs": "Import Pricelist z Discomp to AbraFlexi"
+  },
+  "requirements": ["AbraFlexi"],
+  "tags": [
+    "Discomp",
+    "Pricelist",
+    "Importer"
+  ],
+  "homepage": "https://github.com/Spoje-NET/discomp2abraflexi",
+  "image": "",
+  "ociimage": "docker.io/vitexsoftware/discomp2abraflexi",
+  "executable": "discomp2abraflexi",
+  "environment": {
+    "ABRAFLEXI_COMPANY": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi comapny code",
+        "cs": "AbraFlexi comapny code"
+      },
+      "defval": "demo_de",
+      "required": true,
+      "category": "API"
     },
-    "description": {
-        "en": "Import Pricelist from Discomp to AbraFlexi",
-        "cs": "Import Pricelist z Discomp to AbraFlexi"
+    "ABRAFLEXI_LOGIN": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Login",
+        "cs": "AbraFlexi Login"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
     },
-    "tags": [
-        "Discomp",
-        "Pricelist",
-        "Importer"
-    ],
-    "homepage": "https://github.com/Spoje-NET/discomp2abraflexi",
-    "image": "",
-    "ociimage": "docker.io/vitexsoftware/discomp2abraflexi",
-    "executable": "discomp2abraflexi",
-    "environment": {
-        "ABRAFLEXI_COMPANY": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi comapny code",
-                "cs": "AbraFlexi comapny code"
-            },
-            "defval": "demo_de",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_LOGIN": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Login",
-                "cs": "AbraFlexi Login"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_PASSWORD": {
-            "type": "password",
-            "description": {
-                "en": "AbraFlexi password",
-                "cs": "AbraFlexi password"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_URL": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Server URI",
-                "cs": "AbraFlexi Server URI"
-            },
-            "defval": "https://demo.flexibee.eu:5434",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_STORAGE": {
-            "type": "string",
-            "description": {
-                "en": "Intial storage Code",
-                "cs": "Intial storage Code"
-            },
-            "defval": "SKLAD",
-            "required": false,
-            "category": "API"
-        },
-        "ABRAFLEXI_DISCOMP_CODE": {
-            "type": "string",
-            "description": {
-                "en": "Discomp Addressbook Code",
-                "cs": "Discomp Addressbook Code"
-            },
-            "defval": "DISCOMP",
-            "required": false,
-            "category": "API"
-        },
-        "DISCOMP_USERNAME": {
-            "type": "string",
-            "description": {
-                "en": "Your Discomp username",
-                "cs": "Your Discomp username"
-            },
-            "defval": "",
-            "required": true,
-            "category": "Other"
-        },
-        "DISCOMP_PASSWORD": {
-            "type": "password",
-            "description": {
-                "en": "Your Discomp password",
-                "cs": "Your Discomp password"
-            },
-            "defval": "",
-            "required": true,
-            "category": "Security"
-        },
-        "DISCOMP_TYP_ZASOBY": {
-            "type": "string",
-            "description": {
-                "en": "Intial storage Code",
-                "cs": "Intial storage Code"
-            },
-            "defval": "typZasoby.material",
-            "required": false,
-            "category": "Other"
-        },
-        "DISCOMP_API_DEBUG": {
-            "type": "bool",
-            "description": {
-                "en": "Show API debug messages",
-                "cs": "Show API debug messages"
-            },
-            "defval": "False",
-            "required": false,
-            "category": "Behavior"
-        },
-        "DISCOMP_SCOPE": {
-            "type": "string",
-            "description": {
-                "en": "Import Scope",
-                "cs": "Import Scope"
-            },
-            "defval": "yesterday",
-            "required": false,
-            "options": {
-                "today": "today",
-                "yesterday": "yesterday",
-                "last_week": "last_week",
-                "last_month": "last_month",
-                "last_two_months": "last_two_months",
-                "previous_month": "previous_month",
-                "two_months_ago": "two_months_ago",
-                "this_year": "this_year",
-                "january": "January",
-                "february": "February",
-                "march": "March",
-                "april": "April",
-                "may": "May",
-                "june": "June",
-                "july": "July",
-                "august": "August",
-                "september": "September",
-                "october": "October",
-                "november": "November",
-                "december": "December"
-            },
-            "category": "Other"
-        },
-        "RESULT_FILE": {
-            "type": "string",
-            "description": {
-                "en": "write output json data to",
-                "cs": "write output json data to"
-            },
-            "defval": "discomp_pricelist_for_{DISCOMP_USERNAME}.json",
-            "required": false,
-            "category": "Other"
-        },
-        "APP_DEBUG": {
-            "type": "bool",
-            "description": {
-                "en": "Show debug messages",
-                "cs": "Show debug messages"
-            },
-            "defval": "False",
-            "required": false,
-            "category": "Behavior"
-        },
-        "EASE_LOGGER": {
-            "type": "string",
-            "description": {
-                "en": "Logger type",
-                "cs": "Logger type"
-            },
-            "defval": "syslog|console",
-            "required": false,
-            "category": "Behavior"
-        }
+    "ABRAFLEXI_PASSWORD": {
+      "type": "password",
+      "description": {
+        "en": "AbraFlexi password",
+        "cs": "AbraFlexi password"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
     },
-    "exitCodes": {
-        "0": {
-            "description": {
-                "en": "Success",
-                "cs": "Úspěch"
-            },
-            "severity": "success",
-            "retry": false
-        }
+    "ABRAFLEXI_URL": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Server URI",
+        "cs": "AbraFlexi Server URI"
+      },
+      "defval": "https://demo.flexibee.eu:5434",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_STORAGE": {
+      "type": "string",
+      "description": {
+        "en": "Intial storage Code",
+        "cs": "Intial storage Code"
+      },
+      "defval": "SKLAD",
+      "required": false,
+      "category": "API"
+    },
+    "ABRAFLEXI_DISCOMP_CODE": {
+      "type": "string",
+      "description": {
+        "en": "Discomp Addressbook Code",
+        "cs": "Discomp Addressbook Code"
+      },
+      "defval": "DISCOMP",
+      "required": false,
+      "category": "API"
+    },
+    "DISCOMP_USERNAME": {
+      "type": "string",
+      "description": {
+        "en": "Your Discomp username",
+        "cs": "Your Discomp username"
+      },
+      "defval": "",
+      "required": true,
+      "category": "Other"
+    },
+    "DISCOMP_PASSWORD": {
+      "type": "password",
+      "description": {
+        "en": "Your Discomp password",
+        "cs": "Your Discomp password"
+      },
+      "defval": "",
+      "required": true,
+      "category": "Security"
+    },
+    "DISCOMP_TYP_ZASOBY": {
+      "type": "string",
+      "description": {
+        "en": "Intial storage Code",
+        "cs": "Intial storage Code"
+      },
+      "defval": "typZasoby.material",
+      "required": false,
+      "category": "Other"
+    },
+    "DISCOMP_API_DEBUG": {
+      "type": "bool",
+      "description": {
+        "en": "Show API debug messages",
+        "cs": "Show API debug messages"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Behavior"
+    },
+    "DISCOMP_SCOPE": {
+      "type": "string",
+      "description": {
+        "en": "Import Scope",
+        "cs": "Import Scope"
+      },
+      "defval": "yesterday",
+      "required": false,
+      "options": {
+        "today": "today",
+        "yesterday": "yesterday",
+        "last_week": "last_week",
+        "last_month": "last_month",
+        "last_two_months": "last_two_months",
+        "previous_month": "previous_month",
+        "two_months_ago": "two_months_ago",
+        "this_year": "this_year",
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      },
+      "category": "Other"
+    },
+    "RESULT_FILE": {
+      "type": "string",
+      "description": {
+        "en": "write output json data to",
+        "cs": "write output json data to"
+      },
+      "defval": "discomp_pricelist_for_{DISCOMP_USERNAME}.json",
+      "required": false,
+      "category": "Other"
+    },
+    "APP_DEBUG": {
+      "type": "bool",
+      "description": {
+        "en": "Show debug messages",
+        "cs": "Show debug messages"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Behavior"
+    },
+    "EASE_LOGGER": {
+      "type": "string",
+      "description": {
+        "en": "Logger type",
+        "cs": "Logger type"
+      },
+      "defval": "syslog|console",
+      "required": false,
+      "category": "Behavior"
     }
+  },
+  "exitCodes": {
+    "0": {
+      "description": {
+        "en": "Success",
+        "cs": "Úspěch"
+      },
+      "severity": "success",
+      "retry": false
+    }
+  }
 }
