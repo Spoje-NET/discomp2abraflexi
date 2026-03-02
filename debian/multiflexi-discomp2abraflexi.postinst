@@ -4,13 +4,17 @@ set -e
 
 . /usr/share/debconf/confmodule
 
+
 # Iterate over all json files inf usr/lib/discomp2abraflexi/multiflexi
-for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.app.json`
+for app in `ls /usr/lib/discomp2abraflexi/multiflexi/*.app.json`
 do
-	multiflexi-cli application import-json --file $file
+    echo Application: $app
+    multiflexi-cli application import-json --file $app
 done
 
-for file in `ls /usr/lib/discomp2abraflexi/multiflexi/*.credtype.json`
+
+for credtype in `ls /usr/lib/discomp2abraflexi/multiflexi/*.credtype.json`
 do
-	multiflexi-cli crprototype import-json --file $file
+	echo Credential ProtoType: $credtype
+	multiflexi-cli crprototype import-json --file $credtype
 done
