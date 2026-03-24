@@ -6,14 +6,14 @@ set -e
 
 
 # Iterate over all json files inf usr/lib/discomp2abraflexi/multiflexi
-for app in `ls /usr/lib/discomp2abraflexi/multiflexi/*.app.json`
+for app in $(ls /usr/lib/discomp2abraflexi/multiflexi/*.app.json)
 do
     echo Application: $app
     multiflexi-cli application import-json --file $app
 done
 
 
-for credtype in `ls /usr/lib/discomp2abraflexi/multiflexi/*.credtype.json`
+for credtype in $(ls /usr/lib/discomp2abraflexi/multiflexi/*.crdprtype.json)
 do
 	echo Credential ProtoType: $credtype
 	multiflexi-cli crprototype import-json --file $credtype
