@@ -1,4 +1,6 @@
 {
+  "schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/credential-prototype.json",
+  "version": "1.0",
   "uuid": "aae4c666-eec7-4a48-bc47-0f62b96ea473",
   "id": "discomp",
   "code": "DISCOMP",

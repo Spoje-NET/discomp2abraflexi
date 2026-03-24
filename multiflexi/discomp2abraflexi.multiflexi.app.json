@@ -10,7 +10,7 @@
     "en": "Import Pricelist from Discomp to AbraFlexi",
     "cs": "Import Pricelist z Discomp to AbraFlexi"
   },
-  "requirements": ["AbraFlexi"],
+  "requirements": ["AbraFlexi", "Discomp"],
   "tags": [
     "Discomp",
     "Pricelist",
@@ -24,7 +24,7 @@
     "ABRAFLEXI_COMPANY": {
       "type": "string",
       "description": {
-        "en": "AbraFlexi comapny code",
+        "en": "AbraFlexi company code",
         "cs": "AbraFlexi kód firmy"
       },
       "defval": "demo_de",

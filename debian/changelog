@@ -1,8 +1,14 @@
-discomp2abraflexi (0.3.5) UNRELEASED; urgency=medium
+discomp2abraflexi (0.3.6) UNRELEASED; urgency=medium
+
+  * debian native autoloading used
+
+ -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 02:46:51 +0100
+
+discomp2abraflexi (0.3.5) unstable; urgency=medium
 
   * build fox
 
- -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:59:40 +0100
+ -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 02:46:34 +0100
 
 discomp2abraflexi (0.3.4) unstable; urgency=medium
 

@@ -1,5 +1,5 @@
 src/*		                usr/share/discomp2abraflexi/
-src/Discomp/*			        usr/share/discomp2abraflexi/Discomp/
+src/Discomp/*			usr/share/php/SpojeNet/Discomp/
 debian/autoload.php             usr/share/php/SpojeNet/Discomp/
 composer.json                   usr/share/php/SpojeNet/Discomp/
 bin/*                           usr/bin/

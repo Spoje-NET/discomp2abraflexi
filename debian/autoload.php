@@ -7,32 +7,18 @@
  * and registers a PSR-4 loader for the package classes.
  */
 
-$depAutoloads = [
-    '/usr/share/php/EaseCore/autoload.php',
-    '/usr/share/php/AbraFlexi/autoload.php',
-];
-
-foreach ($depAutoloads as $file) {
-    if (file_exists($file)) {
-        require_once $file;
-    }
-}
-
-/* Register PSR-4 autoloader for SpojeNet\\Discomp\\ mapped to
- * /usr/share/discomp2abraflexi/Discomp/
- */
-spl_autoload_register(function (string $class) : void {
-    $prefix = 'SpojeNet\\\\Discomp\\\\';
-    if (strpos($class, $prefix) !== 0) {
+require_once '/usr/share/php/Ease/autoload.php';
+require_once '/usr/share/php/AbraFlexi/autoload.php';
+spl_autoload_register(function ($class) {
+    $prefix = 'SpojeNet\\Discomp\\';
+    $base_dir = '/usr/share/php/SpojeNet/Discomp/';
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
         return;
     }
-
-    $relative = substr($class, strlen($prefix));
-    $file = '/usr/share/discomp2abraflexi/Discomp/' . str_replace('\\\\', '/', $relative) . '.php';
-
+    $relative_class = substr($class, $len);
+    $file = $base_dir . '/' . str_replace('\\', '/', $relative_class) . '.php';
     if (file_exists($file)) {
-        require_once $file;
+        require $file;
     }
 });
-
-return true;
