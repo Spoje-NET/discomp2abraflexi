@@ -1,6 +1,7 @@
-debian/conf/composer.json       usr/lib/discomp2abraflexi/
-src/*			                usr/share/discomp2abraflexi/
+src/*		                usr/share/discomp2abraflexi/
 src/Discomp/*			        usr/share/discomp2abraflexi/Discomp/
+debian/autoload.php             usr/share/php/SpojeNet/Discomp/
+composer.json                   usr/share/php/SpojeNet/Discomp/
 bin/*                           usr/bin/
 example.env                     etc/discomp2abraflexi
 discomp2abraflexi.svg           usr/share/icons/hicolor/scalable/apps/
