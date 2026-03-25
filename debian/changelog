@@ -1,8 +1,14 @@
-discomp2abraflexi (0.3.6) UNRELEASED; urgency=medium
+discomp2abraflexi (0.3.7) UNRELEASED; urgency=medium
+
+  * file descriptor leak fix
+
+ -- vitex <info@vitexsoftware.cz>  Wed, 25 Mar 2026 23:08:52 +0100
+
+discomp2abraflexi (0.3.6) unstable; urgency=medium
 
   * debian native autoloading used
 
- -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 02:46:51 +0100
+ -- vitex <info@vitexsoftware.cz>  Wed, 25 Mar 2026 23:08:12 +0100
 
 discomp2abraflexi (0.3.5) unstable; urgency=medium
 

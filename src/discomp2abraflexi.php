@@ -30,8 +30,8 @@ require_once '../vendor/autoload.php';
 /**
  * Get today's Statements list.
  */
-$options = getopt('o::e::', ['output::environment::']);-
-Shared::init(
+$options = getopt('o::e::', ['output::environment::']);
+-Shared::init(
     [
         'ABRAFLEXI_URL',
         'ABRAFLEXI_LOGIN',
