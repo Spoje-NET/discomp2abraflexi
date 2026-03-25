@@ -121,6 +121,10 @@ class ApiClient extends \Ease\Molecule
      */
     public function curlInit()
     {
+        if ($this->curl instanceof \CurlHandle) {
+            curl_close($this->curl);
+        }
+
         $this->curl = \curl_init(); // create curl resource
         \curl_setopt($this->curl, \CURLOPT_RETURNTRANSFER, true); // return content as a string from curl_exec
         \curl_setopt($this->curl, \CURLOPT_FOLLOWLOCATION, true); // follow redirects
@@ -256,7 +260,7 @@ class ApiClient extends \Ease\Molecule
      */
     public function disconnect(): void
     {
-        if (\is_resource($this->curl)) {
+        if ($this->curl instanceof \CurlHandle) {
             curl_close($this->curl);
         }
 

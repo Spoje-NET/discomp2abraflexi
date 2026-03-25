@@ -94,15 +94,39 @@ class Importer extends \Ease\Sand
 
     /**
      * Try to free resources.
+     * Explicitly disconnect AbraFlexi objects to release their cURL handles
+     * before nulling them -- necessary because PHP 8+ changed curl_init() to
+     * return a CurlHandle object instead of a resource, so any destructor that
+     * still uses is_resource() would silently skip curl_close().
      */
     public function abraFlexiDisconnect(): void
     {
-        $this->sokoban = null;
+        if ($this->sokoban !== null) {
+            $this->sokoban->disconnect();
+            $this->sokoban = null;
+        }
+
+        if ($this->pricer !== null) {
+            $this->pricer->disconnect();
+            $this->pricer = null;
+        }
+
+        if ($this->category !== null) {
+            $this->category->disconnect();
+            $this->category = null;
+        }
+
+        if ($this->atribut !== null) {
+            $this->atribut->disconnect();
+            $this->atribut = null;
+        }
+
+        if ($this->atributType !== null) {
+            $this->atributType->disconnect();
+            $this->atributType = null;
+        }
+
         $this->suplier = null;
-        $this->pricer = null;
-        $this->category = null;
-        $this->atribut = null;
-        $this->atributType = null;
     }
 
     /**
@@ -285,14 +309,6 @@ class Importer extends \Ease\Sand
             }
 
             $this->updatePrice($activeItemData);
-
-            // Uvolnění objektů a vynucení garbage collectoru kvůli filehandlerům
-            $this->sokoban = null;
-            $this->pricer = null;
-            $this->category = null;
-            $this->atribut = null;
-            $this->atributType = null;
-            gc_collect_cycles();
         }
 
         return $result;
