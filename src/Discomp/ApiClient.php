@@ -37,6 +37,11 @@ class ApiClient extends \Ease\Molecule
     public bool $throwException = true;
 
     /**
+     * Authentication session ID.
+     */
+    private ?string $authSessionId = null;
+
+    /**
      * CURL resource handle.
      *
      * @var null|\CurlHandle|resource
@@ -130,7 +135,7 @@ class ApiClient extends \Ease\Molecule
         \curl_setopt($this->curl, \CURLOPT_FOLLOWLOCATION, true); // follow redirects
         \curl_setopt($this->curl, \CURLOPT_HTTPAUTH, true); // HTTP authentication
         \curl_setopt($this->curl, \CURLOPT_SSL_VERIFYPEER, true);
-        \curl_setopt($this->curl, \CURLOPT_SSL_VERIFYHOST, false);
+        \curl_setopt($this->curl, \CURLOPT_SSL_VERIFYHOST, 2);
         \curl_setopt($this->curl, \CURLOPT_VERBOSE, $this->debug === true); // For debugging
 
         if ($this->timeout) {
@@ -161,13 +166,12 @@ class ApiClient extends \Ease\Molecule
     /**
      * Execute HTTP request.
      *
-     * @param string $url        URL of request
-     * @param string $method     HTTP Method GET|POST|PUT|OPTIONS|DELETE
-     * @param mixed  $postParams
+     * @param string $url    URL of request
+     * @param string $method HTTP Method GET|POST|PUT|OPTIONS|DELETE
      *
      * @return int HTTP Response CODE
      */
-    public function doCurlRequest($url, $method = 'GET', $postParams = [])
+    public function doCurlRequest($url, $method = 'GET')
     {
         curl_setopt($this->curl, \CURLOPT_URL, $url);
         curl_setopt($this->curl, \CURLOPT_CUSTOMREQUEST, strtoupper($method));
@@ -282,13 +286,7 @@ class ApiClient extends \Ease\Molecule
             throw new \Exception($this->lastCurlResponse !== false && $this->lastCurlResponse !== null ? (string) $this->lastCurlResponse : 'Empty or invalid response');
         }
 
-        $xmlString = $this->lastCurlResponse;
-
-        if (!\is_string($xmlString) || $xmlString === '' || $xmlString === false) {
-            throw new \Exception('Invalid XML response string');
-        }
-
-        $decodedXml = html_entity_decode($xmlString, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+        $decodedXml = html_entity_decode($this->lastCurlResponse, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
 
         return current(self::xml2array(new \SimpleXMLElement($decodedXml)));
     }
@@ -311,7 +309,9 @@ class ApiClient extends \Ease\Molecule
             throw new \Exception($this->curlInfo['url']."\n".($this->lastCurlResponse ? html_entity_decode($this->lastCurlResponse) : 'Empty response'));
         }
 
-        return current(self::xml2array(new \SimpleXMLElement($this->lastCurlResponse)));
+        $decodedXml = html_entity_decode($this->lastCurlResponse, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
+        return current(self::xml2array(new \SimpleXMLElement($decodedXml)));
     }
 
     /**
@@ -380,7 +380,7 @@ class ApiClient extends \Ease\Molecule
         \curl_setopt($curl, \CURLOPT_RETURNTRANSFER, true);
         \curl_setopt($curl, \CURLOPT_FOLLOWLOCATION, true);
         \curl_setopt($curl, \CURLOPT_SSL_VERIFYPEER, true);
-        \curl_setopt($curl, \CURLOPT_SSL_VERIFYHOST, false);
+        \curl_setopt($curl, \CURLOPT_SSL_VERIFYHOST, 2);
 
         if ($this->timeout) {
             \curl_setopt($curl, \CURLOPT_HTTPHEADER, [
@@ -396,6 +396,12 @@ class ApiClient extends \Ease\Molecule
         $this->lastCurlError = \curl_error($curl);
         \curl_close($curl);
         $this->lastCurlResponse = $imageData;
+
+        if ($imageData === false) {
+            $this->addStatusMessage(sprintf(_('Failed to download image from %s: %s'), $baseImageUrl, $this->lastCurlError), 'error');
+
+            return '';
+        }
 
         return $imageData;
     }

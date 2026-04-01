@@ -177,7 +177,6 @@ class Importer extends \Ease\Sand
     public function freshItems(): array
     {
         $result = [];
-        $errors = 0;
         $freshItems = $this->getFreshItems();
 
         foreach ($freshItems as $pos => $activeItemData) {
@@ -238,7 +237,9 @@ class Importer extends \Ease\Sand
             $result[$this->sokoban->getRecordCode()] = ['name' => $this->sokoban->getDataValue('nazev')];
 
             if (empty($recordCheck)) {
-                $this->discomper->addStatusMessage($activeItemData['CODE'].': '.$activeItemData['NAME'].' new item', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
+                $insertResult = $this->sokoban->insertToAbraFlexi();
+                $insertResponseCode = $this->sokoban->lastResponseCode;
+                $this->discomper->addStatusMessage($activeItemData['CODE'].': '.$activeItemData['NAME'].' new item', $insertResult ? 'success' : 'error');
 
                 if (\array_key_exists('IMAGES', $activeItemData) && \array_key_exists('IMAGE', $activeItemData['IMAGES'])) {
                     if (\is_array($activeItemData['IMAGES']['IMAGE'])) {
@@ -248,7 +249,7 @@ class Importer extends \Ease\Sand
                             ++$this->images;
                         }
                     } else {
-                        $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'_'. 0 .'.jpg', $this->discomper->getImage($activeItemData['IMAGES']['IMAGE']), $this->discomper->getResponseMime());
+                        $stdImg = \AbraFlexi\Priloha::addAttachment($this->sokoban, $discompItemCode.'_0.jpg', $this->discomper->getImage($activeItemData['IMAGES']['IMAGE']), $this->discomper->getResponseMime());
                         $this->sokoban->addStatusMessage(Functions::uncode($this->sokoban->getRecordCode()).' Img: '.$activeItemData['IMAGES']['IMAGE'], $stdImg->lastResponseCode === 201 ? 'success' : 'error');
                         ++$this->images;
                     }
@@ -256,11 +257,11 @@ class Importer extends \Ease\Sand
                     unset($stdImg);
                 }
 
-                if ($this->sokoban->lastResponseCode === 201) {
+                if ($insertResponseCode === 201) {
                     $result[$this->sokoban->getRecordCode()]['status'] = 'success';
                     ++$this->new;
                 } else {
-                    ++$errors;
+                    ++$this->errors;
                     $result[$this->sokoban->getRecordCode()] = $this->sokoban->getData();
                     $result[$this->sokoban->getRecordCode()]['status'] = 'failed';
                 }
@@ -353,8 +354,6 @@ class Importer extends \Ease\Sand
     public function allTimeItems(): array
     {
         $result = [];
-        $errors = 0;
-        $storageItems = [];
         $activeItems = $this->discomper->getResult('StoItemActive');
         $this->discomper->addStatusMessage(_('AllTime scope: ').' '.sprintf(_('%d Active Items found'), \count($activeItems)), 'success');
 
@@ -375,21 +374,10 @@ class Importer extends \Ease\Sand
                     if (\array_key_exists('PartNo', $stoItem)) {
                         $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::uncode($stoItem['PartNo'])]);
                         $this->sokoban->dataReset();
-                        $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material')); // TODO: ???
-                        $this->sokoban->setDataValue('typZasobyK', 'typZasoby.material'); // TODO: ???
-                        $this->sokoban->setDataValue('skladove', true); // TODO: ???
+                        $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material'));
+                        $this->sokoban->setDataValue('skladove', true);
                         $this->sokoban->setDataValue('kod', $stoItem['PartNo']);
-                        $this->pricer->unsetDataValue('id');
-                        $this->pricer->setDataValue('cenik', Functions::code($stoItem['PartNo']));
-                        $this->pricer->setDataValue('nakupCena', $stoItem['PriceOrd']);
-
-                        if (\array_key_exists('QtyFree', $stoItem)) {
-                            $this->pricer->setDataValue('stavMJ', $stoItem['QtyFree']);
-                        } else {
-                            $this->pricer->setDataValue('stavMJ', 0);
-                        }
-
-                        $this->sokoban->setDataValue('nakupCena', ceil($stoItem['PriceDea'] + $stoItem['PriceRef']));
+                        $this->sokoban->setDataValue('nakupCena', ceil((float) $stoItem['PriceDea'] + (float) $stoItem['PriceRef']));
                         $this->sokoban->setDataValue('ean', $stoItem['Code']);
                         $this->sokoban->setDataValue('nazev', $stoItem['Name']);
 
@@ -432,17 +420,28 @@ class Importer extends \Ease\Sand
                             if ($this->sokoban->lastResponseCode === 201) {
                                 ++$this->new;
                             } else {
-                                ++$errors;
+                                ++$this->errors;
                             }
                         } else {
                             if (\array_key_exists('dodavatel', $recordCheck) && ($recordCheck['dodavatel'] === $this->suplier)) {
                                 $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' update', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
                             } else {
-                                $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' already iported', 'info');
+                                $this->discomper->addStatusMessage($pos.'/'.\count($activeItems).' '.$stoItem['Code'].': '.$stoItem['Name'].' already imported', 'info');
                             }
                         }
 
-                        $this->updatePrice($stoItem);
+                        $priceData = [
+                            'CODE' => $stoItem['Code'],
+                            'PURCHASE_PRICE' => $stoItem['PriceOrd'],
+                            'CURRENCY' => \array_key_exists('CurCode', $storageItem['StoItemBase']['@attributes']) ? $storageItem['StoItemBase']['@attributes']['CurCode'] : 'CZK',
+                            'PART_NUMBER' => $stoItem['PartNo'],
+                        ];
+
+                        if (\array_key_exists('QtyFree', $stoItem)) {
+                            $priceData['STOCK'] = ['AMOUNT' => $stoItem['QtyFree']];
+                        }
+
+                        $this->updatePrice($priceData);
                     } else {
                         $this->discomper->addStatusMessage(sprintf(_('Item %s %s does not contain part number. Skipping'), $stoItem['Code'], $stoItem['Name']), 'warning');
                         ++$this->skipped;
@@ -540,7 +539,7 @@ class Importer extends \Ease\Sand
                 break;
             case 'this_year':
                 $this->since = new \DateTime('first day of January '.date('Y'));
-                $this->until = new \DateTime('last day of December'.date('Y'));
+                $this->until = new \DateTime('last day of December '.date('Y'));
 
                 break;
             case 'January':  // 1
@@ -568,7 +567,7 @@ class Importer extends \Ease\Sand
                 } else {
                     if (preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $scope)) {
                         $this->since = new \DateTime($scope);
-                        $this->until = (new \DateTime($scope))->setTime(23, 59, 59, 999);
+                        $this->until = (new \DateTime($scope))->modify('+1 day');
 
                         break;
                     }

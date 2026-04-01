@@ -38,7 +38,5 @@ require_once '../vendor/autoload.php';
 );
 
 $importer = new Discomp\Importer();
-$importer->addStatusMessage(_('Supplier Exists'), $importer->ensureSupplierExists() ? 'success' : 'error');
-$importer->addStatusMessage(_('Category Root Exists'), $importer->ensureCategoryRootExists() ? 'success' : 'error');
 
 // Todo Attach Discomp logo to ROOT

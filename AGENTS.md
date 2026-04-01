@@ -1,4 +1,4 @@
-# WARP.md - Working AI Reference for discomp2abraflexi
+# AGENTS.md - Working AI Reference for discomp2abraflexi
 
 ## Project Overview
 **Type**: PHP Project/Debian Package
