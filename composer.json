@@ -1,7 +1,7 @@
 {
     "name": "spojenet/discomp2abraflexi",
     "description": "Import Pricelist from Discomp to AbraFlexi",
-    "type": "package",
+    "type": "project",
     "require": {
         "spojenet/flexibee": "^3.7"
     },
