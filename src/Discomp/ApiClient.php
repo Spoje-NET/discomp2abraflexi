@@ -61,7 +61,7 @@ class ApiClient extends \Ease\Molecule
     /**
      * Last CURL response error.
      */
-    private string $lastCurlError;
+    private string $lastCurlError = '';
 
     /**
      * Discomp Username.
@@ -88,7 +88,7 @@ class ApiClient extends \Ease\Molecule
     /**
      * HTTP Response code of latst request.
      */
-    private int $lastResponseCode;
+    private int $lastResponseCode = 0;
 
     /**
      * Discomp Data obtainer.
@@ -100,7 +100,7 @@ class ApiClient extends \Ease\Molecule
     {
         $this->apiUsername = \strlen($username) ? $username : \Ease\Shared::cfg('DISCOMP_USERNAME');
         $this->apiPassword = \strlen($password) ? $password : \Ease\Shared::cfg('DISCOMP_PASSWORD');
-        $this->debug = strtolower((string) \Ease\Shared::cfg('DISCOMP_API_DEBUG', false)) === 'True';
+        $this->debug = strtolower((string) \Ease\Shared::cfg('DISCOMP_API_DEBUG', false)) === 'true';
         $this->retryCount = (int) \Ease\Shared::cfg('DISCOMP_RETRY', 10);
         $this->curlInit();
         $this->setObjectName();

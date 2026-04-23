@@ -39,25 +39,25 @@ class Importer extends \Ease\Sand
     private int $skipped = 0;
     private int $errors = 0;
     private array $levels = [];
-    private ?\AbraFlexi\StromCenik $category;
+    public ?\AbraFlexi\StromCenik $category;
 
     /**
      * @var array CategoryTree cache
      */
     private array $treeCache = [];
-    private ?RW $atributType;
-    private ?RW $atribut;
+    public ?RW $atributType;
+    public ?RW $atribut;
 
     /**
      * Supplier code for \AbraFlexi\Adresar.
      */
-    private ?string $suplier;
+    public ?string $suplier;
 
     /**
      * Pricelist Engine.
      */
-    private ?\AbraFlexi\Cenik $sokoban;
-    private ?\AbraFlexi\Dodavatel $pricer;
+    public ?\AbraFlexi\Cenik $sokoban;
+    public ?\AbraFlexi\Dodavatel $pricer;
     private int $images = 0;
 
     /**
@@ -262,14 +262,18 @@ class Importer extends \Ease\Sand
                     ++$this->new;
                 } else {
                     ++$this->errors;
-                    $result[$this->sokoban->getRecordCode()] = $this->sokoban->getData();
                     $result[$this->sokoban->getRecordCode()]['status'] = 'failed';
                 }
             } else {
                 $progressInfo = '('.$pos.'/'.\count($freshItems).') '.$activeItemData['CODE'].': '.$activeItemData['NAME'];
 
                 if (\array_key_exists('dodavatel', $recordCheck) && ($recordCheck['dodavatel'] === $this->suplier)) {
-                    $this->discomper->addStatusMessage($progressInfo.' update', $this->sokoban->insertToAbraFlexi() ? 'success' : 'error');
+                    $updateOk = $this->sokoban->insertToAbraFlexi();
+                    $this->discomper->addStatusMessage($progressInfo.' update', $updateOk ? 'success' : 'error');
+
+                    if ($updateOk) {
+                        ++$this->updated;
+                    }
                 } else {
                     $this->discomper->addStatusMessage($progressInfo.' already enlisted', 'info');
                 }
@@ -372,7 +376,7 @@ class Importer extends \Ease\Sand
                     $largeImageUrl = $storageItem['StoItemBase']['@attributes']['UrlBaseEnlargement'].$discompItemId;
 
                     if (\array_key_exists('PartNo', $stoItem)) {
-                        $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::uncode($stoItem['PartNo'])]);
+                        $recordCheck = $this->sokoban->getColumnsFromAbraFlexi(['dodavatel', 'nazev', 'popis', 'pocetPriloh'], ['id' => \AbraFlexi\Functions::code($stoItem['PartNo'])]);
                         $this->sokoban->dataReset();
                         $this->sokoban->setDataValue('typZasobyK', \Ease\Shared::cfg('DISCOMP_TYP_ZASOBY', 'typZasoby.material'));
                         $this->sokoban->setDataValue('skladove', true);
@@ -485,7 +489,7 @@ class Importer extends \Ease\Sand
 
         try {
             $this->pricer->insertToAbraFlexi();
-            $this->pricer->addStatusMessage('supplier price update: '.Functions::uncode($this->sokoban->getRecordCode()).': '.$this->pricer->getDataValue('nakupCena').' '.\AbraFlexi\Functions::uncode($this->pricer->getDataValue('mena')), $this->pricer->lastResponseCode === 201 ? 'success' : 'error');
+            $this->pricer->addStatusMessage('supplier price update: '.Functions::uncode($this->sokoban->getRecordCode()).': '.$this->pricer->getDataValue('nakupCena').' '.\AbraFlexi\Functions::uncode($this->pricer->getDataValue('mena')), \in_array($this->pricer->lastResponseCode, [200, 201], true) ? 'success' : 'error');
         } catch (\AbraFlexi\Exception $exc) {
             echo $exc->getTraceAsString();
             ++$this->errors;

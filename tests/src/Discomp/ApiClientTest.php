@@ -29,7 +29,7 @@ class ApiClientTest extends TestCase
     public function testCurlInit(): void
     {
         $curl = $this->apiClient->curlInit();
-        $this->assertIsResource($curl);
+        $this->assertInstanceOf(\CurlHandle::class, $curl);
     }
 
     public function testDoCurlRequest(): void
@@ -52,7 +52,8 @@ class ApiClientTest extends TestCase
         $this->apiClient->curlInit();
         $this->apiClient->doCurlRequest('https://httpbin.org/status/404');
         $error = $this->apiClient->getErrors();
-        $this->assertNotEmpty($error);
+        // HTTP 404 is a valid response — curl_error() is only non-empty on network-level failures
+        $this->assertEmpty($error);
     }
 
     public function testGetLastResponseCode(): void
