@@ -9,12 +9,12 @@ set -e
 for app in $(ls /usr/lib/discomp2abraflexi/multiflexi/*.app.json)
 do
     echo Application: $app
-    multiflexi-cli application import-json --file $app
+    multiflexi-cli application:import-json --file $app
 done
 
 
 for credtype in $(ls /usr/lib/discomp2abraflexi/multiflexi/*.crdprtype.json)
 do
 	echo Credential ProtoType: $credtype
-	multiflexi-cli crprototype import-json --file $credtype
+	multiflexi-cli credential-prototype:import-json --file $credtype
 done
