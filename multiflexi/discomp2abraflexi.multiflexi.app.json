@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-  "schemaVersion": "3.2.1",
+  "schemaVersion": "3.4.0",
   "uuid": "60e3fd6f-1c7c-4be7-b1ff-801c94b70f39",
   "name": {
     "en": "discomp2abraflexi",
@@ -10,7 +10,10 @@
     "en": "Import Pricelist from Discomp to AbraFlexi",
     "cs": "Import Pricelist z Discomp to AbraFlexi"
   },
-  "requirements": ["AbraFlexi", "Discomp"],
+  "requirements": [
+    "AbraFlexi",
+    "Discomp"
+  ],
   "tags": [
     "Discomp",
     "Pricelist",
@@ -20,6 +23,13 @@
   "image": "",
   "ociimage": "docker.io/vitexsoftware/discomp2abraflexi",
   "executable": "discomp2abraflexi",
+  "events": {
+    "emits": {
+      "document.imported": {
+        "description": "A document was imported into the accounting system"
+      }
+    }
+  },
   "environment": {
     "ABRAFLEXI_COMPANY": {
       "type": "string",
