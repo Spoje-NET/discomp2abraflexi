@@ -1,4 +1,5 @@
 
+![Packaging: deb](https://img.shields.io/badge/packaging-.deb-red?logo=debian&logoColor=white)
 ![discomp2abraflexi](social-preview.svg?raw=true)
 
 Konfigurace
