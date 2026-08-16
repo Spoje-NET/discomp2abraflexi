@@ -6,9 +6,13 @@
   <project_license>MIT</project_license>
   <name>discomp2abraflexi</name>
   <summary>Import Discomp pricelist into AbraFlexi</summary>
+  <summary xml:lang="cs">Import ceníku Discomp do AbraFlexi</summary>
   <description>
     <p>
       Enlist the pricelist items and supplier prices. Application Definition for MultiFlexi
+    </p>
+    <p xml:lang="cs">
+      Zapisuje položky ceníku a ceny dodavatele. Definice aplikace pro MultiFlexi
     </p>
   </description>
   <categories>

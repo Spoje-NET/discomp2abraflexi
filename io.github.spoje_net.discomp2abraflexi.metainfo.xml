@@ -4,13 +4,17 @@
   
   <name>discomp2abraflexi</name>
   <summary> Import Discomp pricelist into AbraFlexi </summary>
-  
+  <summary xml:lang="cs">Import ceníku Discomp do AbraFlexi</summary>
+
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
-  
+
   <description>
     <p>
       Import Discomp pricelist into AbraFlexi every day
+    </p>
+    <p xml:lang="cs">
+      Každý den importuje ceník Discomp do AbraFlexi
     </p>
   </description>
   
