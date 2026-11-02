@@ -131,4 +131,20 @@ class ApiClientTest extends TestCase
             $this->assertNotEmpty($image, "Image download failed on iteration {$i}");
         }
     }
+    public function testSanitizeXmlHandlesHtmlInDescription(): void
+    {
+        foreach (['<p>a<br>b & c</p>', '&lt;p&gt;a&lt;br&gt;b&lt;/p&gt;', '<![CDATA[<br>x]]>'] as $desc) {
+            $xml = "\xEF\xBB\xBF<Result><StoItem><DESCRIPTION>{$desc}</DESCRIPTION><NAME>A & B\x01</NAME></StoItem></Result>";
+            $parsed = simplexml_load_string(ApiClient::sanitizeXml($xml), \SimpleXMLElement::class, \LIBXML_NOCDATA);
+            $this->assertNotFalse($parsed, $desc);
+            $this->assertSame('A & B', (string) $parsed->StoItem->NAME);
+            $this->assertStringContainsString('br', (string) $parsed->StoItem->DESCRIPTION);
+        }
+    }
+
+    public function testSanitizeXmlLeavesValidXmlUnchanged(): void
+    {
+        $xml = '<Result><StoItem Id="1" Name="a &amp; b"/></Result>';
+        $this->assertSame($xml, ApiClient::sanitizeXml($xml));
+    }
 }

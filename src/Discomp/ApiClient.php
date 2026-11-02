@@ -272,6 +272,71 @@ class ApiClient extends \Ease\Molecule
     }
 
     /**
+     * Make supplier XML safe for the parser: strip BOM and invalid control
+     * characters, wrap HTML-bearing text fields in CDATA, escape stray ampersands.
+     */
+    public static function sanitizeXml(string $xml): string
+    {
+        $xml = preg_replace('/^\xEF\xBB\xBF/', '', $xml) ?? $xml;
+        $xml = preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', $xml) ?? $xml;
+
+        $xml = preg_replace_callback(
+            '~<(DESCRIPTION|SHORT_DESCRIPTION)(\s[^>]*)?>(.*?)</\1>~s',
+            static function (array $m): string {
+                $content = $m[3];
+
+                if (preg_match('~^\s*<!\[CDATA\[.*\]\]>\s*$~s', $content)) {
+                    return $m[0];
+                }
+
+                // Text is kept as-is (entity-escaped or raw HTML); only CDATA terminators need splitting
+                $content = str_replace(']]>', ']]]]><![CDATA[>', $content);
+
+                return '<'.$m[1].($m[2] ?? '').'><![CDATA['.$content.']]></'.$m[1].'>';
+            },
+            $xml,
+        ) ?? $xml;
+
+        // Bare ampersands outside CDATA sections
+        $parts = preg_split('~(<!\[CDATA\[.*?\]\]>)~s', $xml, -1, \PREG_SPLIT_DELIM_CAPTURE);
+
+        foreach ($parts as $i => $part) {
+            if (!str_starts_with($part, '<![CDATA[')) {
+                $parts[$i] = preg_replace('~&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-f]+);)~i', '&amp;', $part);
+            }
+        }
+
+        return implode('', $parts);
+    }
+
+    /**
+     * Parse sanitized XML; throws exception with libxml details on failure.
+     */
+    private function parseXml(string $xml): \SimpleXMLElement
+    {
+        $previous = libxml_use_internal_errors(true);
+
+        try {
+            $result = simplexml_load_string(self::sanitizeXml($xml), \SimpleXMLElement::class, \LIBXML_NOCDATA);
+
+            if ($result === false) {
+                $messages = [];
+
+                foreach (libxml_get_errors() as $error) {
+                    $messages[] = trim($error->message).' (line '.$error->line.')';
+                }
+
+                throw new \Exception(($this->curlInfo['url'] ?? '')."\nInvalid XML: ".implode('; ', $messages));
+            }
+
+            return $result;
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
+    }
+
+    /**
      * @see https://www.discomp.cz/i6ws/ResultTypeInfo.ashx
      *
      * @param string $resultType
@@ -286,9 +351,7 @@ class ApiClient extends \Ease\Molecule
             throw new \Exception($this->lastCurlResponse !== false && $this->lastCurlResponse !== null ? (string) $this->lastCurlResponse : 'Empty or invalid response');
         }
 
-        $decodedXml = html_entity_decode($this->lastCurlResponse, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
-
-        return current(self::xml2array(new \SimpleXMLElement($decodedXml)));
+        return current(self::xml2array($this->parseXml($this->lastCurlResponse)));
     }
 
     /**
@@ -309,9 +372,7 @@ class ApiClient extends \Ease\Molecule
             throw new \Exception($this->curlInfo['url']."\n".($this->lastCurlResponse ? html_entity_decode($this->lastCurlResponse) : 'Empty response'));
         }
 
-        $decodedXml = html_entity_decode($this->lastCurlResponse, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
-
-        return current(self::xml2array(new \SimpleXMLElement($decodedXml)));
+        return current(self::xml2array($this->parseXml($this->lastCurlResponse)));
     }
 
     /**
