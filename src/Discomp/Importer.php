@@ -101,29 +101,15 @@ class Importer extends \Ease\Sand
      */
     public function abraFlexiDisconnect(): void
     {
-        if ($this->sokoban !== null) {
-            $this->sokoban->disconnect();
-            $this->sokoban = null;
-        }
+        foreach (['sokoban', 'pricer', 'category', 'atribut', 'atributType'] as $property) {
+            if ($this->{$property} !== null) {
+                // Older php-spojenet-abraflexi versions have no disconnect() method
+                if (method_exists($this->{$property}, 'disconnect')) {
+                    $this->{$property}->disconnect();
+                }
 
-        if ($this->pricer !== null) {
-            $this->pricer->disconnect();
-            $this->pricer = null;
-        }
-
-        if ($this->category !== null) {
-            $this->category->disconnect();
-            $this->category = null;
-        }
-
-        if ($this->atribut !== null) {
-            $this->atribut->disconnect();
-            $this->atribut = null;
-        }
-
-        if ($this->atributType !== null) {
-            $this->atributType->disconnect();
-            $this->atributType = null;
+                $this->{$property} = null;
+            }
         }
 
         $this->suplier = null;
